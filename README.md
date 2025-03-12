@@ -13,7 +13,6 @@ What is your app? Give a brief description in a couple of sentences.
 Why is your app needed? Give any background information around any pain points or other reasons.
 
 - Primary Users;
-
   - Want to communicate their feelings.
   - Want to track their moods over time.
   - Seek tips to improve their emotional state.
@@ -110,13 +109,14 @@ List endpoints that your server will implement, including HTTP methods, paramete
 Authentication:
 
 - POST /register: Register a new user.
+
   - Request body {
 
-      "username": "john_doe",
+    "username": "john_doe",
 
-      "email": "<john@example.com>",
+    "email": "<john@example.com>",
 
-      "password": "securepassword"
+    "password": "securepassword"
 
 }
 
@@ -127,6 +127,7 @@ Authentication:
   "user_id": 1
 
   }
+
 - POST /login: Log in an existing user.
 - - Request body {
 
@@ -219,11 +220,14 @@ Scope your project as a sprint. Break down the tasks that will need to be comple
 
 **Backend Setup**
 
+Day 1-2
+
 - Initialize **Node.js & Express**
 - Set up **database schema** (users, mood entries)
 - Create **mood logging API** (`POST /mood`)
 
   **Frontend Setup**
+
 - Initialize **React App**
 - Set up **React Router** (Register, Login, Home, Reports)
 - Build **basic Home Page UI**
@@ -232,21 +236,27 @@ Scope your project as a sprint. Break down the tasks that will need to be comple
 
 **Backend: Implement reports functionality**
 
+Day 3-5
+
 - Create **GET `/report`** to fetch past mood entries
 - Create **GET `/report/download`** to allow report download
 - **Update `POST /mood`** to allow users to select a **specific date** instead of only logging today's date
 
   **Frontend: Build the Reports Page & Calendar Feature**
+
 - Display **past mood entries** in a table/list
 - Add **calendar component** where users can **select a date** and log their mood for that day
 - Implement a **Download Report** button
 
   **Test calendar functionality**
+
 - Ensure moods are being **logged for the correct date**
 
 ---
 
 **Backend: Integrate Sentiment Analysis**
+
+Day 5-8
 
 - Install **`sentiment` npm package**
 - Modify **`POST /mood`** to analyze mood text and categorize sentiment
@@ -258,10 +268,13 @@ Scope your project as a sprint. Break down the tasks that will need to be comple
 
 **Improve Overall UI/UX**
 
+Day 9nt
+
 - Enhance **Home & Reports page design**
 - Make calendar & mood logging more **user-friendly**
 
   **Test Core Functionality**
+
 - Ensure users can **log moods & view history**
 - Fix any **bugs in sentiment analysis**
 
@@ -284,7 +297,6 @@ Your project will be marked based on what you committed to in the above document
 - Implement Dark mode
 - Profile Page - Allow users to customize their experience
 - AI Recommendations - Use advanced models for mood suggestion
-
   - Create **Register (`POST /register`) & Login (`POST /login`)**
   - Secure endpoints with **JWT authentication**
   - Create **Register & Login Forms**
