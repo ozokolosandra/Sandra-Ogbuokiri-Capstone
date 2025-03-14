@@ -1,0 +1,6 @@
+@use "./styles/partials/variables" as *;
+
+body {
+    background: linear-gradient(to right, $gradient-color1, $gradient-color2);
+
+}
