@@ -1,81 +1,31 @@
 export default  
-    [
-        {
-          "mood_category": "Confident",
-          "message": "Your words have power—keep writing and sharing your wisdom!"
-        },
-        {
-          "mood_category": "Remorseful",
-          "message": "The past is behind you; focus on what brings you joy today!"
-        },
-        {
-          "mood_category": "Irritable",
-          "message": "Take a deep breath and treat yourself to something comforting. You’ve got this!"
-        },
-        {
-          "mood_category": "Annoyed",
-          "message": "Find beauty in the little things—maybe tomorrow their song will sound sweeter."
-        },
-        {
-          "mood_category": "Sympathetic",
-          "message": "Your empathy is a gift—keep spreading kindness!"
-        },
-        {
-          "mood_category": "Neutral",
-          "message": "Life has its ups and downs, but you're moving forward!"
-        },
-        {
-          "mood_category": "Honored",
-          "message": "You deserve the recognition! Keep shining!"
-        },
-        {
-          "mood_category": "Lonely",
-          "message": "You are not alone. Reach out—someone cares about you."
-        },
-        {
-          "mood_category": "Committed",
-          "message": "Stay true to your values. Love built on trust is worth waiting for."
-        },
-        {
-          "mood_category": "Stressed",
-          "message": "Take deep breaths. Serenity is within reach."
-        },
-        {
-          "mood_category": "Triumphant",
-          "message": "Celebrate every victory, big or small!"
-        },
-        {
-          "mood_category": "Inspired",
-          "message": "Faith and reflection bring light to life. Keep growing in spirit!"
-        },
-        {
-          "mood_category": "Hopeless",
-          "message": "Even in the darkest moments, hope still shines. Keep going."
-        },
-        {
-          "mood_category": "Reflective",
-          "message": "Acknowledging your feelings is growth. Keep choosing kindness."
-        },
-        {
-          "mood_category": "Betrayed",
-          "message": "Healing takes time. You are worthy of trust and love."
-        },
-        {
-          "mood_category": "Anxious",
-          "message": "Take it step by step; you've got this!"
-        },
-        {
-          "mood_category": "Happy",
-          "message": "What an amazing recognition! Keep shining!"
-        },
-        {
-          "mood_category": "Optimistic",
-          "message": "The future is bright! Embrace the new season with hope!"
-        },
-        {
-          "mood_category": "Loved",
-          "message": "You are cherished and loved. Keep nurturing those meaningful relationships."
-        }
-      
-    ]
-  
+
+  [
+    { "mood_category": "Confident", "message": "You’re unstoppable! Keep channeling that confidence into your dreams." },
+    { "mood_category": "Remorseful", "message": "Forgiveness starts with yourself. Let go of what you can’t change and grow stronger." },
+    { "mood_category": "Irritable", "message": "A little self-care goes a long way. Take a moment for yourself today—you deserve it." },
+    { "mood_category": "Annoyed", "message": "Challenges are temporary. Tomorrow might bring the breakthrough you’re waiting for." },
+    { "mood_category": "Sympathetic", "message": "Your kindness makes the world a brighter place—thank you for being you." },
+    { "mood_category": "Neutral", "message": "Sometimes, balance is all we need. Enjoy the steady path you’re on." },
+    { "mood_category": "Honored", "message": "You’ve earned this! Let your light shine even brighter today." },
+    { "mood_category": "Lonely", "message": "You are valuable and loved. Take a step to connect—it can make all the difference." },
+    { "mood_category": "Committed", "message": "Your dedication inspires others. Keep building toward your goals with unwavering strength." },
+    { "mood_category": "Stressed", "message": "Pause and breathe. You have the power to overcome whatever lies ahead." },
+    { "mood_category": "Triumphant", "message": "Victory is yours! Don’t forget to savor the sweet taste of success." },
+    { "mood_category": "Inspired", "message": "The spark within you is contagious. Share your light and watch it grow." },
+    { "mood_category": "Hopeless", "message": "This too shall pass. Even when it’s tough, know that better days are on the horizon." },
+    { "mood_category": "Reflective", "message": "Your self-awareness is a strength. Reflect, learn, and let your journey continue." },
+    { "mood_category": "Betrayed", "message": "The pain will heal. Trust yourself and know that you are worthy of love and loyalty." },
+    { "mood_category": "Anxious", "message": "Take one step at a time. You’re doing better than you realize." },
+    { "mood_category": "Happy", "message": "Joy looks so good on you! Keep spreading the positivity to those around you." },
+    { "mood_category": "Optimistic", "message": "Keep dreaming big—the best is yet to come, and you’re ready for it." },
+    { "mood_category": "Loved", "message": "You are deeply loved. Treasure the moments that fill your heart." },
+    { "mood_category": "Confused", "message": "Clarity often comes after patience. Take your time to figure it out—you’ll get there." },
+    { "mood_category": "Discouraged", "message": "Every step forward, no matter how small, is still progress. Keep going—you’re stronger than you know." },
+    { "mood_category": "Overwhelmed", "message": "Breathe deeply—one thing at a time is all you need to handle right now." },
+    { "mood_category": "Grateful", "message": "Your gratitude is a gift—share it, and it will inspire others around you." },
+    { "mood_category": "Insecure", "message": "You have a unique light that no one else can shine. Embrace your amazing self." },
+    { "mood_category": "Exhausted", "message": "Rest is part of the journey, not the end of it. Recharge—you deserve it." },
+    { "mood_category": "Worried", "message": "Peace begins with acceptance. You’ve got this—one step at a time." },
+    { "mood_category": "Excited", "message": "Your excitement is contagious—channel it into something unforgettable." }
+  ]

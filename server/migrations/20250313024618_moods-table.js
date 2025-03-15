@@ -10,15 +10,26 @@ export function up(knex) {
       table.string("email").notNullable().unique();
       table.string("password").notNullable();
       table.timestamp("created_at").defaultTo(knex.fn.now());
-      table
-        .timestamp("updated_at")
-        .defaultTo(knex.raw("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"));
+      table.timestamp("updated_at").defaultTo(knex.raw("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"));
     })
+    .createTable("uplifting_messages", (table) => {
+      table.increments("id").primary();
+      table.string("mood_category", 50).notNullable().unique(); // Add unique constraint
+      table.string("message", 1000).notNullable().collate("utf8mb4_unicode_ci");
+      table.timestamp("created_at").defaultTo(knex.fn.now());
+      table.timestamp("updated_at").defaultTo(knex.fn.now());
+    })
+    
     .createTable("mood", (table) => {
       table.increments("id").primary();
-      table.string("mood_text", 1000).notNullable().collate('utf8mb4_unicode_ci'); 
-      table.string("mood_category", 50).notNullable(); // Mood category
-      table.string("uplifting_message", 1000).notNullable().collate('utf8mb4_unicode_ci');
+      table.string("mood_text", 1000).notNullable().collate("utf8mb4_unicode_ci");
+      table
+        .string("mood_category", 50)
+        .notNullable()
+        .references("mood_category")
+        .inTable("uplifting_messages")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
       table
         .integer("user_id")
         .unsigned()
@@ -26,19 +37,9 @@ export function up(knex) {
         .references("id")
         .inTable("users")
         .onUpdate("CASCADE")
-        .onDelete("CASCADE"); // Foreign key to users table
-      table.timestamp("created_at").defaultTo(knex.fn.now()); // Timestamp for creation
-      table.timestamp("updated_at").defaultTo(knex.fn.now())
-    
-    })
-    .createTable("uplifting_messages", (table) => {
-      return knex.schema.createTable("uplifting_messages", (table) => {
-        table.increments("id").primary(); 
-        table.string("mood_category", 50).notNullable(); 
-        table.string("message", 1000).notNullable().collate('utf8mb4_unicode_ci'); 
-        table.timestamp("created_at").defaultTo(knex.fn.now()); 
-        table.timestamp("updated_at").defaultTo(knex.fn.now()); 
-      });
+        .onDelete("CASCADE");
+      table.timestamp("created_at").defaultTo(knex.fn.now());
+      table.timestamp("updated_at").defaultTo(knex.fn.now());
     })
     .createTable("reports", (table) => {
       table.increments("id").primary();
@@ -62,7 +63,7 @@ export function up(knex) {
 export function down(knex) {
   return knex.schema
     .dropTableIfExists("reports")
+    .dropTableIfExists("mood")
     .dropTableIfExists("uplifting_messages")
-    .dropTableIfExists("moods")
     .dropTableIfExists("users");
 }

@@ -1,0 +1,84 @@
+@use "../../styles/partials/variables" as *;
+
+.vibes {
+
+    padding: 1rem;
+    font-family: "Outfit";
+
+
+    &__header {
+        display: flex;
+        justify-content: center;
+    }
+
+    &__vibes {
+        flex-direction: column;
+        display: flex;
+        width: 100%;
+
+    }
+
+    &__info__date {
+        width: 100%;
+    }
+
+    &__mood__input {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+    }
+}
+
+.form {
+    &__form__vibes {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.vibes__button {
+    height: 36px;
+    display: flex;
+    justify-content: space-between;
+    gap: .25rem;
+}
+
+.submit-btn {
+    border: 1px solid $button-color;
+    background-color: $button-color;
+    width: 50%;
+    border-radius: 20px;
+}
+
+.cancel-btn {
+    border: 1px solid $button-color;
+    background-color: $button-color;
+    width: 30%;
+    border-radius: 20px;
+}
+
+input,
+textarea {
+    resize: none;
+    border: 1px solid #BDC5D5;
+    background: linear-gradient(to right,
+            rgba(208, 207, 233, 0.34),
+            /* Light purple with 34% opacity */
+            rgba(223, 39, 113, 0.55),
+            /* Dark pink with 55% opacity */
+            rgba(186, 239, 255, 0.67),
+            /* Light blue with 67% opacity */
+            rgba(255, 206, 183, 1.0)
+            /* Soft peach with full opacity */
+        );
+
+
+    padding: 10px;
+    border-radius: 8px;
+}
