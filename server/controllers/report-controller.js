@@ -2,20 +2,36 @@ import initKnex from "knex";
 import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
-const getReport= async (req,res)=>{
-try {
-  const data = await knex("reports").select(
-    "id",
-    "user_id",
-    "report_data"
+const getReport = async (req, res) => {
+  try {
+      const { user_id, startDate, endDate } = req.query;
 
-  )  
-  res.status(200).json(data)
-} catch (error) {
-    res.status(400).send(`Error retrieving moods : ${error}`)
+      if (!user_id) {
+          return res.status(400).json({ error: "User ID is required." });
+      }
 
-}
-}
+      // Build the query with filtering logic
+      let query = knex("reports")
+          .select("id", "user_id", "report_data", "generated_at")
+          .where("user_id", user_id);
+
+      if (startDate) query = query.where("generated_at", ">=", new Date(startDate));
+      if (endDate) query = query.where("generated_at", "<=", new Date(endDate));
+
+      const data = await query;
+
+      if (data.length === 0) {
+          return res.status(404).json({ message: "No reports found for this user." });
+      }
+
+      res.status(200).json(data);
+  } catch (error) {
+      console.error("Error retrieving reports:", error); // Log the error for debugging
+      res.status(500).send(`Error retrieving reports: ${error.message}`);
+  }
+};
+
+  
 
 const createReport = async (req, res) => {
     try {

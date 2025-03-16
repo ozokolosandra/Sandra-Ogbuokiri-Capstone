@@ -1,11 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header/Header";
 import axios from "axios";
 import AddVibes from "../../components/AddVibes/AddVibes";
-import { useNavigate } from "react-router-dom";  // Import useNavigate
+import { useNavigate } from "react-router-dom";  
+import SideNav from "../../components/SideNav/SideNav";
+import "./HomePage.scss";
 
 function HomePage({ name }) {
-  const navigate = useNavigate();  // Get the navigate function
+  const navigate = useNavigate();
+  const [isSidebarActive, setIsSidebarActive] = useState(false);
 
   async function fetchMoods() {
     try {
@@ -20,12 +23,20 @@ function HomePage({ name }) {
     fetchMoods();
   }, []);
 
+  const toggleSidebar = () => {
+    setIsSidebarActive(!isSidebarActive);
+  };
+
   return (
     <div>
-      <Header name={name} />
-      <AddVibes onCancel={() => navigate("/moods")} />
-      {/* user={currentUser} */}
-    </div>
+      <Header />
+      
+        <SideNav  />
+       
+          <AddVibes onCancel={() => navigate("/")} />
+        
+      </div>
+    
   );
 }
 

@@ -1,0 +1,66 @@
+@use "../../styles/partials/variables" as *;
+
+.reports {
+    padding-left: 1rem;
+
+    &__container {
+        width: 80%;
+        margin-left: 3rem;
+        margin-top: 1rem;
+
+        & h3 {
+            margin: 32px;
+
+        }
+    }
+
+
+
+
+    &__durationPicker {
+        margin-bottom: 20px;
+
+
+    }
+
+    &__customDatePicker {
+        margin-top: 10px;
+
+        ; // Add spacing between elements
+    }
+
+
+    &__datePickerLabel {
+        margin-right: 10px;
+
+
+    }
+
+    &__applyButton {
+        margin-left: 10px;
+        padding: 5px 10px;
+        background-color: $button-color; // Use variable for button color
+        color: white;
+        border: 5px solid$button-color;
+        border-radius: 20px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: darken($button-color, 10%); // Use variable for hover effect
+        }
+
+
+    }
+
+    &__chartContainer {
+        margin-top: 20px;
+        min-height: 300px; // Set a minimum height for the chart
+
+
+    }
+
+    &__errorMessage {
+        //color: red;
+        margin-top: 20px;
+    }
+}

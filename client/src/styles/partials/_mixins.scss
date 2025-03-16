@@ -13,3 +13,11 @@
 
     }
 }
+
+@mixin background-gradient {
+    background: linear-gradient(90deg,
+            $background-colour1 0%,
+            $background-colour2 30%,
+            $background-colour3 60%,
+            $gradient-color2 100%);
+}

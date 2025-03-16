@@ -37,11 +37,11 @@ async function analyzeSentimentHF(text) {
   }
 }
 
-// Helper to convert the Hugging Face prediction into a mood category.
+
 const categorizeSentiment = (hfResult) => {
-    // Ensure the response is in the expected format
+ 
     if (!Array.isArray(hfResult) || hfResult.length === 0 || !Array.isArray(hfResult[0])) {
-      return "Neutral"; // Default to Neutral if the response is invalid
+      return "Neutral"; 
     }
   
     // Extract the first result (POSITIVE/NEGATIVE with scores)

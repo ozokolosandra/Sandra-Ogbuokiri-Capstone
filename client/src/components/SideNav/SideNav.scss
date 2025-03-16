@@ -1,0 +1,120 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.side-nav {
+    position: absolute;
+    width: 60px; // Default collapsed width
+    height: 100vh;
+    display: flex;
+
+    align-items: center;
+    padding-top: 20px;
+    padding: 0.4rem 0.8rem;
+    transition: all 0.5s ease;
+
+
+    &__header {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    &__list {
+        list-style: none;
+        padding: 0;
+
+        .side-nav__link {
+            text-decoration: none;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: white;
+            display: block;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+                background-color: #501b74;
+            }
+        }
+    }
+}
+
+.sidebar-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+}
+
+.sidebar-icon {
+    position: absolute;
+    top: 0.4rem;
+    left: 50%;
+    transform: translateX(-50%);
+    line-height: 50px;
+    cursor: pointer;
+}
+
+.nav-item {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    /* Align items horizontally */
+    align-items: center;
+    /* Vertically align text and icon */
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.2s ease-in-out;
+    margin: 0 10px;
+    /* Add space between icon and text */
+}
+
+.nav-item:hover .nav-icon {
+    transform: scale(1.1);
+}
+
+.nav-text {
+    visibility: hidden;
+
+    margin-top: 0;
+
+    font-size: 14px;
+    color: #333;
+    opacity: 0;
+    /* Invisible by default */
+    transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
+    /* Delay visibility change until after opacity transition */
+}
+
+
+
+.tooltip {
+    position: absolute;
+    top: 50%;
+    left: 120%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 5px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.nav-item:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+}

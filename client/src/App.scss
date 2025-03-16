@@ -1,6 +1,9 @@
+@use "./styles/partials/global" as *;
+@use "./styles/partials/mixins" as *;
 @use "./styles/partials/variables" as *;
 
 body {
-    background: linear-gradient(to right, $gradient-color1, $gradient-color2);
-
+    box-sizing: border-box;
+    background-color: $background-colour;
+    color: $text-color // @include background-gradient
 }
