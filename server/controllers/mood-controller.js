@@ -6,7 +6,7 @@ const knex = initKnex(configuration);
 // Hugging Face API configuration
 const HF_API_URL =
   "https://api-inference.huggingface.co/models/distilbert/distilbert-base-uncased-finetuned-sst-2-english";
-const HF_API_TOKEN = "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";
+const HF_API_TOKEN = process.env.HF_API_TOKEN;
 
 /**
  * Calls Hugging Face API for sentiment analysis.
