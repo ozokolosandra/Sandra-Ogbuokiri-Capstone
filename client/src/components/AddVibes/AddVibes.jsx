@@ -12,30 +12,29 @@ function AddVibes({ user, onCancel }) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+      
         if (!date || !moodText) {
-            alert("Please select a date and enter your mood.");
-            return;
+          alert("Please select a date and enter your mood.");
+          return;
         }
-
+      
         try {
-            const response = await axios.post("http://localhost:8080/moods", {
-                mood_text: moodText,
-                date: date,
-                user_id: user?.id || 1,
-            });
-            console.log(response.data);
-            
-
-            setUpliftingMessage(response.data.uplifting_message);
-            setIsModalOpen(true);
-            setMoodText("");
-            setDate("");
+          const response = await axios.post("http://localhost:8080/moods", {
+            mood_text: moodText,
+            date: date,
+            user_id: user?.id, // Use the user_id from the user prop
+          });
+          console.log(response.data);
+      
+          setUpliftingMessage(response.data.uplifting_message);
+          setIsModalOpen(true);
+          setMoodText("");
+          setDate("");
         } catch (error) {
-            console.error("Error adding mood:", error);
-            alert("Failed to add mood. Please try again.");
+          console.error("Error adding mood:", error);
+          alert("Failed to add mood. Please try again.");
         }
-    };
+      };
 
     const handleModalClose = () => {
         setIsModalOpen(false); // Close the modal
@@ -44,7 +43,7 @@ function AddVibes({ user, onCancel }) {
 
     return (
         <div className="vibes">
-            <h2 className="vibes__header">Hello</h2>
+            <h2 className="vibes__header">Hello  {user?.user_name || "Guest"} </h2>
 
             {!upliftingMessage && (
                 <form onSubmit={handleSubmit} className="form__vibes">

@@ -2,49 +2,43 @@ import React, { useEffect, useState } from "react";
 import Header from "../../components/Header/Header";
 import axios from "axios";
 import AddVibes from "../../components/AddVibes/AddVibes";
-import { useNavigate } from "react-router-dom";  
+import { useNavigate } from "react-router-dom";
 import SideNav from "../../components/SideNav/SideNav";
 import "./HomePage.scss";
 
-function HomePage({ name }) {
+function HomePage() {
   const navigate = useNavigate();
-  const [isSidebarActive, setIsSidebarActive] = useState(false);
+  const [user, setUser] = useState(null);
 
-  // Check if the user is authenticated
   useEffect(() => {
-    const token = localStorage.getItem("token"); // or sessionStorage
+    const token = localStorage.getItem("token");
+    const user_id = localStorage.getItem("user_id");
+    const user_name = localStorage.getItem("user_name");
 
     if (!token) {
-      // Redirect to the login page if no token is found
-      navigate("/login");
+      navigate("/login"); 
+      return;
+    }
+
+    if (user_id && user_name) {
+      setUser({ id: user_id, user_name });
     }
   }, [navigate]);
 
-  async function fetchMoods() {
-    try {
-      const response = await axios.get("http://localhost:8080/moods");
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching moods:", error);
-    }
-  }
-
-  useEffect(() => {
-    fetchMoods();
-  }, []);
-
-  const toggleSidebar = () => {
-    setIsSidebarActive(!isSidebarActive);
+  const handleCancel = () => {
+    console.log("Cancelled adding vibes");
   };
 
   return (
     <div>
       <Header />
-      
-      <SideNav  />
-     
-      <AddVibes onCancel={() => navigate("/")} />
-      
+      <SideNav />
+
+      {user ? (
+        <AddVibes user={user} onCancel={handleCancel} />
+      ) : (
+        <p>Please log in to add vibes.</p>
+      )}
     </div>
   );
 }

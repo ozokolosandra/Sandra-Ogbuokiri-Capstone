@@ -1,0 +1,60 @@
+@use "../../styles/partials/variables" as *;
+
+
+.login {
+    &-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    &-container h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+
+    &-container form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    &-container input {
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 250px;
+    }
+
+    &-container button {
+        padding: 10px;
+        background-color: $button-color1;
+        color: $white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 250px;
+    }
+
+    &-container button:hover {
+        background-color: $button-color2;
+    }
+}
+
+.error-message {
+    color: $error;
+    margin-top: 10px;
+}
+
+.register-link {
+    color: #4caf50;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}

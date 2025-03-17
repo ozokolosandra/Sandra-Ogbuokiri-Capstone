@@ -3,71 +3,85 @@ import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
 const getReport = async (req, res) => {
-    try {
-      const { user_id, startDate, endDate } = req.query;
-  
-      if (!user_id) {
-        return res.status(400).json({ error: "User ID is required." });
-      }
-  
-      // Query the mood table for the user's mood entries
-      let query = knex("mood")
-        .select("mood_category", "created_at")
-        .where("user_id", user_id);
-  
-      if (startDate) query = query.where("created_at", ">=", new Date(startDate));
-      if (endDate) query = query.where("created_at", "<=", new Date(endDate));
-  
-      const moods = await query;
-      
-      // Log the moods array for debugging
-      console.log(`Moods: ${JSON.stringify(moods)}`);
-     
-      // Loop through moods and log each mood category
-      moods.forEach(mood => {
-        console.log(`Mood Category: ${mood.mood_category}`);
-      });
-  
-      if (moods.length === 0) {
-        return res.status(404).json({ message: "No mood data found for this user." });
-      }
-  
-      // Aggregate mood data by counting occurrences of each mood_category
-      const moodCounts = {};
-      moods.forEach(({ mood_category }) => {
-        moodCounts[mood_category] = (moodCounts[mood_category] || 0) + 1;
-      });
-  
-      // Determine the most common mood
-      const mostCommonMood = Object.keys(moodCounts).reduce(
-        (a, b) => (moodCounts[a] > moodCounts[b] ? a : b),
-        null
-      );
-  
-      const reportData = {
-        mood_trends: moodCounts,
-        most_common_mood: mostCommonMood,
-        time_period: {
-          start_date: startDate || "No start date provided",
-          end_date: endDate || "No end date provided",
-        },
-      };
-      
-      // Log additional info for debugging
-      console.log(`User ID: ${user_id}`);
-      console.log(`Start Date: ${startDate}`);
-      console.log(`End Date: ${endDate}`);
-      console.log(`SQL Query: ${query.toString()}`);
-  
-      // Return the dynamically generated report data
-      res.status(200).json(reportData);
-    } catch (error) {
-      console.error("Error retrieving reports:", error);
-      res
-        .status(500)
-        .json({ error: `Error retrieving reports: ${error.message}` });
+  try {
+    const { user_id, startDate, endDate } = req.query;
+
+    // Validate user_id
+    if (!user_id) {
+      return res.status(400).json({ error: "User ID is required." });
     }
-  };
+
+    // Validate date formats
+    const isValidDate = (dateString) => /^\d{4}-\d{2}-\d{2}$/.test(dateString);
+    if (startDate && !isValidDate(startDate)) {
+      return res.status(400).json({ error: "Invalid start date format. DD-MM-YYYY." });
+    }
+    if (endDate && !isValidDate(endDate)) {
+      return res.status(400).json({ error: "Invalid end date format. Use DD-MM-YYYY." });
+    }
+    
+    let query = knex("mood")
+      .select("mood_category", "created_at")
+      .where("user_id", user_id);
+      console.log(`Received user_id: ${user_id}`);
+
+    if (startDate) query = query.where("created_at", ">=", new Date(startDate));
+    if (endDate) query = query.where("created_at", "<=", new Date(endDate));
+
+    const moods = await query;
+
+    // Log the moods array for debugging
+    console.log(`Moods: ${JSON.stringify(moods)}`);
+    console.log("Final SQL Query:", query.toString());
+
+    // Handle empty mood data
+    if (moods.length === 0) {
+      return res.status(404).json({ 
+        message: `No mood data found for user ID: ${user_id}.`,
+      });
+    }
+
+    // Aggregate mood data by counting occurrences of each mood_category
+    const moodCounts = {};
+    moods.forEach(({ mood_category }) => {
+      moodCounts[mood_category] = (moodCounts[mood_category] || 0) + 1;
+    });
+
+    // Determine the most common mood (handle ties)
+    const maxCount = Math.max(...Object.values(moodCounts));
+    const mostCommonMoods = Object.keys(moodCounts).filter(
+      (mood) => moodCounts[mood] === maxCount
+    );
+    const mostCommonMood = mostCommonMoods.join(", "); // Join ties with a comma
+
+    
+    const reportData = {
+      mood_trends: moodCounts,
+      most_common_mood: mostCommonMood,
+      time_period: {
+        start_date: startDate || "No start date provided",
+        end_date: endDate || "No end date provided",
+      },
+    };
+
+    // Log additional info for debugging
+    console.log(`User ID: ${user_id}`);
+    console.log(`Start Date: ${startDate}`);
+    console.log(`End Date: ${endDate}`);
+    console.log(`Report Data: ${JSON.stringify(reportData)}`);
+
+    
+    
+    res.status(200).json(reportData);
+  } catch (error) {
+    console.error("Error retrieving reports:", { 
+      message: error.message, 
+      stack: error.stack, 
+      query: req.query,
+    });
+    res.status(500).json({ error: `Error retrieving reports: ${error.message}` });
+  }
+};
   
 
 const createReport = async (req, res) => {

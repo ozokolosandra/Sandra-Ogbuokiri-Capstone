@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.scss';
+import LogoutPage from "./pages/LogoutPage/LogoutPage"
 import HomePage from './pages/HomePage/HomePage';
 import ReportPage from "./pages/ReportPage/ReportPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
@@ -9,10 +10,11 @@ function App() {
     <BrowserRouter>  
       <Routes>
         <Route path="/" element={<HomePage />} /> 
-        <Route path="/login" element={<LoginPage />} />  {/* Login page route */}
-        <Route path="/register" element={<RegisterPage />} />  {/* Register page route */}
+        <Route path="/login" element={<LoginPage />} />  
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/logout" element={<LogoutPage />} />    
         {/* <Route path="*" element={<NotFoundPage />} /> */}
-        <Route path="/report" element={<ReportPage />} /> {/* Fixed Route syntax */}
+        <Route path="/report" element={<ReportPage />} /> 
       </Routes>
     </BrowserRouter>
   );

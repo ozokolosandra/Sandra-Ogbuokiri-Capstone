@@ -29,14 +29,14 @@
     &__applyButton {
         margin-left: 10px;
         padding: 5px 10px;
-        background-color: $button-color;
-        color: white;
-        border: 5px solid $button-color;
+        background-color: $button-color1;
+        color: $white;
+        border: 5px solid $button-color2;
         border-radius: 20px;
         cursor: pointer;
 
         &:hover {
-            background-color: darken($button-color, 10%);
+            background-color: darken($button-color2, 10%);
         }
     }
 

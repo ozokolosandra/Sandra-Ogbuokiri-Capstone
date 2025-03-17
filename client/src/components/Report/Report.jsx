@@ -40,10 +40,10 @@ const Report = () => {
     Stressed: "#6B5B95", // Lavender
   };
 
-  const fetchReports = async (start, end) => {
+  const fetchReports = async (start, end,user_id) => {
     try {
       const response = await axios.get("http://localhost:8080/reports", {
-        params: { startDate: start, endDate: end, user_id: 2 },
+        params: { startDate: start, endDate: end, user_id: user_id},
       });
       console.log("API Response:", response.data);
 
