@@ -3,114 +3,121 @@ import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
 const getReport = async (req, res) => {
-  try {
-    const { user_id, startDate, endDate } = req.query;
-
-    if (!user_id) {
-      return res.status(400).json({ error: "User ID is required." });
-    }
-
-    // Query the mood table for the user's mood entries
-    let query = knex("mood")
-      .select("mood_category", "created_at")
-      .where("user_id", user_id);
-
-    if (startDate) query = query.where("created_at", ">=", new Date(startDate));
-    if (endDate) query = query.where("created_at", "<=", new Date(endDate));
-
-    const moods = await query;
-
-    if (moods.length === 0) {
-      return res.status(404).json({ message: "No mood data found for this user." });
-    }
-
-    // Aggregate mood data by counting occurrences of each mood_category
-    const moodCounts = {};
-    moods.forEach(({ mood_category }) => {
-      moodCounts[mood_category] = (moodCounts[mood_category] || 0) + 1;
-    });
-
-    // Determine the most common mood
-    const mostCommonMood = Object.keys(moodCounts).reduce((a, b) =>
-      moodCounts[a] > moodCounts[b] ? a : b, null
-    );
-
-   
-    const reportData = {
-      mood_trends: moodCounts,
-      most_common_mood: mostCommonMood,
-      time_period: {
-        start_date: startDate || "No start date provided",
-        end_date: endDate || "No end date provided",
+    try {
+      const { user_id, startDate, endDate } = req.query;
+  
+      if (!user_id) {
+        return res.status(400).json({ error: "User ID is required." });
       }
-    };
-
-    // Return the dynamically generated report data
-    res.status(200).json(reportData);
-  } catch (error) {
-    console.error("Error retrieving reports:", error);
-    res.status(500).json({ error: `Error retrieving reports: ${error.message}` });
-  }
-};
-
-
-
+  
+      // Query the mood table for the user's mood entries
+      let query = knex("mood")
+        .select("mood_category", "created_at")
+        .where("user_id", user_id);
+  
+      if (startDate) query = query.where("created_at", ">=", new Date(startDate));
+      if (endDate) query = query.where("created_at", "<=", new Date(endDate));
+  
+      const moods = await query;
+      
+      // Log the moods array for debugging
+      console.log(`Moods: ${JSON.stringify(moods)}`);
+     
+      // Loop through moods and log each mood category
+      moods.forEach(mood => {
+        console.log(`Mood Category: ${mood.mood_category}`);
+      });
+  
+      if (moods.length === 0) {
+        return res.status(404).json({ message: "No mood data found for this user." });
+      }
+  
+      // Aggregate mood data by counting occurrences of each mood_category
+      const moodCounts = {};
+      moods.forEach(({ mood_category }) => {
+        moodCounts[mood_category] = (moodCounts[mood_category] || 0) + 1;
+      });
+  
+      // Determine the most common mood
+      const mostCommonMood = Object.keys(moodCounts).reduce(
+        (a, b) => (moodCounts[a] > moodCounts[b] ? a : b),
+        null
+      );
+  
+      const reportData = {
+        mood_trends: moodCounts,
+        most_common_mood: mostCommonMood,
+        time_period: {
+          start_date: startDate || "No start date provided",
+          end_date: endDate || "No end date provided",
+        },
+      };
+      
+      // Log additional info for debugging
+      console.log(`User ID: ${user_id}`);
+      console.log(`Start Date: ${startDate}`);
+      console.log(`End Date: ${endDate}`);
+      console.log(`SQL Query: ${query.toString()}`);
+  
+      // Return the dynamically generated report data
+      res.status(200).json(reportData);
+    } catch (error) {
+      console.error("Error retrieving reports:", error);
+      res
+        .status(500)
+        .json({ error: `Error retrieving reports: ${error.message}` });
+    }
+  };
   
 
 const createReport = async (req, res) => {
-    try {
-        // Extract user_id and report_data from req.body
-        const { user_id, report_data } = req.body;
+  try {
+    // Extract user_id and report_data from req.body
+    const { user_id, report_data } = req.body;
 
-        // Validate required fields
-        if (!user_id || !report_data) {
-            return res.status(400).json({ error: "All fields are required" });
-        }
-
-        // Insert the new report
-        const [insertedId] = await knex("reports").insert({
-            user_id,
-            report_data,
-        });
-
-        // Fetch the newly inserted report using the inserted ID
-        const newReport = await knex("reports")
-            .where("id", insertedId)
-            .first();
-
-        console.log("Inserted report:", newReport); // Debugging: log the inserted report
-        res.status(201).json(newReport); // Send the new report as the response
-    } catch (error) {
-        console.error("Error inserting report:", error); // Debugging: log the error
-        res.status(500).json({ error: `An error occurred: ${error.message}` });
+    // Validate required fields
+    if (!user_id || !report_data) {
+      return res.status(400).json({ error: "All fields are required" });
     }
+
+    // Insert the new report
+    const [insertedId] = await knex("reports").insert({
+      user_id,
+      report_data,
+    });
+
+    // Fetch the newly inserted report using the inserted ID
+    const newReport = await knex("reports").where("id", insertedId).first();
+
+    console.log("Inserted report:", newReport); // Debugging: log the inserted report
+    res.status(201).json(newReport); // Send the new report as the response
+  } catch (error) {
+    console.error("Error inserting report:", error); // Debugging: log the error
+    res.status(500).json({ error: `An error occurred: ${error.message}` });
+  }
 };
 const getReportById = async (req, res) => {
-    try {
-        const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-        const report = await knex("reports")
-            .where("id", id)
-            .first();
+    const report = await knex("reports").where("id", id).first();
 
-        if (!report) {
-            return res.status(404).json({ error: "Report not found." });
-        }
-
-        res.status(200).json(report);
-    } catch (error) {
-        console.error("Error fetching report:", error);
-        res.status(500).json({ error: `An error occurred: ${error.message}` });
+    if (!report) {
+      return res.status(404).json({ error: "Report not found." });
     }
-}; 
 
-export { getReportById,getReport,createReport };
+    res.status(200).json(report);
+  } catch (error) {
+    console.error("Error fetching report:", error);
+    res.status(500).json({ error: `An error occurred: ${error.message}` });
+  }
+};
 
+export { getReportById, getReport, createReport };
 
 // import initKnex from "knex";
 // import configuration from "../knexfile.js";
 // import { GoogleGenerativeAI } from "@google/generative-ai";
-
 
 // const knex = initKnex(configuration);
 
@@ -121,7 +128,7 @@ export { getReportById,getReport,createReport };
 // // Function to generate insights using Gemini
 // const getAIInsights = async (moodCounts, mostCommonMood) => {
 //     const moodSummary = JSON.stringify(moodCounts);
-//     const prompt = `A user has recorded their mood trends over time: ${moodSummary}. 
+//     const prompt = `A user has recorded their mood trends over time: ${moodSummary}.
 //     The most common mood is '${mostCommonMood}'. Generate thoughtful, empathetic, and insightful observations on their emotional patterns and suggest strategies to maintain well-being.`;
 
 //     try {
@@ -164,7 +171,7 @@ export { getReportById,getReport,createReport };
 //         });
 
 //         // Determine most common mood
-//         const mostCommonMood = Object.keys(moodCounts).reduce((a, b) => 
+//         const mostCommonMood = Object.keys(moodCounts).reduce((a, b) =>
 //             (moodCounts[a] > moodCounts[b] ? a : b), null);
 
 //         // Generate AI-powered insights
@@ -193,8 +200,3 @@ export { getReportById,getReport,createReport };
 //         res.status(500).json({ error: `Error retrieving reports: ${error.message}` });
 //     }
 // };
-
-
-
- 
-

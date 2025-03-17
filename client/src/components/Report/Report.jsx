@@ -1,32 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Bar, Line } from "react-chartjs-2"; // Import both Bar and Line
 import axios from "axios";
 import "./Report.scss";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import Chart from "../Chart/Chart";
 
-// Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 const Report = () => {
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
@@ -38,7 +16,6 @@ const Report = () => {
 
   // Map numerical values back to mood strings
   const numberToMood = {
-    
     1: "Very Sad",
     2: "Sad",
     3: "Neutral",
@@ -70,47 +47,23 @@ const Report = () => {
       });
       console.log("API Response:", response.data);
 
-      // Ensure we have an array (wrap in array if it's an object)
-      let reports = response.data;
-      if (!Array.isArray(reports)) {
-        reports = [reports];
-      }
+      const { mood_trends, time_period } = response.data;
 
-      // Define mood mapping for all possible mood categories
-      const moodMapping = {
-        "very sad": 1,
-        sad: 2,
-        neutral: 3,
-        happy: 4,
-        "very happy": 5,
-        confident: 6,
-        triumphant: 7,
-        anxious: 8,
-        stressed: 9,
-      };
+      // Transform mood_trends into an array of { mood_category, count }
+      const moodData = Object.entries(mood_trends).map(([mood_category, count]) => ({
+        mood_category,
+        count,
+      }));
 
-      // Transform data for the chart
-      const labels = reports.map((report) => {
-        const { start_date, end_date } = report.time_period;
-        return `${new Date(start_date).toLocaleDateString()} - ${new Date(
-          end_date
-        ).toLocaleDateString()}`;
-      });
-
-      const moods = reports.map((report) => {
-        const moodStr = report.most_common_mood.toLowerCase();
-        return moodMapping[moodStr] || 0; // Fallback to 0 if undefined
-      });
+      // Create labels and data for the chart
+      const labels = moodData.map((mood) => mood.mood_category);
+      const counts = moodData.map((mood) => mood.count);
 
       // Map mood categories to colors
-      const backgroundColors = reports.map((report) => {
-        const moodStr = report.most_common_mood; // Use the case from the API response
-        return moodColors[moodStr] || "#CCCCCC"; // Fallback to gray if undefined
+      const backgroundColors = moodData.map((mood) => {
+        const moodStr = mood.mood_category;
+        return moodColors[moodStr] || "#CCCCCC"; // Default to gray if mood category is undefined
       });
-
-      console.log("Labels Array:", labels);
-      console.log("Numerical Moods Array:", moods);
-      console.log("Background Colors:", backgroundColors);
 
       // Update chart data
       setChartData({
@@ -118,9 +71,9 @@ const Report = () => {
         datasets: [
           {
             label: "Mood Over Time",
-            data: moods,
-            backgroundColor: backgroundColors, // Assign colors to each bar
-            borderColor: "#FFFFFF", // White border for bars
+            data: counts, // Use counts instead of moods for the bar chart
+            backgroundColor: backgroundColors,
+            borderColor: "#FFFFFF",
             borderWidth: 1,
           },
         ],
@@ -211,103 +164,11 @@ const Report = () => {
       {/* Chart */}
       <div className="report__chartContainer">
         {chartData.labels && chartData.labels.length > 0 ? (
-          <div className="report__chart">
-            {chartType === "bar" ? (
-              <Bar
-                data={chartData}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  scales: {
-                    x: { title: { display: true, text: "Time Period" } },
-                    y: {
-                      title: { display: true, text: "Mood" },
-                      min: 0,
-                      max: 9,
-                      ticks: {
-                        callback: (value) => numberToMood[value],
-                      },
-                    },
-                  },
-                  plugins: {
-                    legend: {
-                      display: true,
-                      position: "top",
-                      labels: {
-                        generateLabels: (chart) => {
-                          const datasets = chart.data.datasets;
-                          return datasets[0].data.map((value, index) => ({
-                            text: numberToMood[value],
-                            fillStyle: datasets[0].backgroundColor[index],
-                            strokeStyle: datasets[0].borderColor[index],
-                            lineWidth: 1,
-                            hidden: false,
-                            index: index,
-                          }));
-                        },
-                      },
-                    },
-                    tooltip: {
-                      callbacks: {
-                        label: (context) => {
-                          const label = context.dataset.label || "";
-                          const value = context.raw;
-                          return `${label}: ${numberToMood[value]}`;
-                        },
-                      },
-                    },
-                  },
-                }}
-              />
-            ) : (
-              <Line
-                data={chartData}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  scales: {
-                    x: { title: { display: true, text: "Time Period" } },
-                    y: {
-                      title: { display: true, text: "Mood" },
-                      min: 0,
-                      max: 9,
-                      ticks: {
-                        callback: (value) => numberToMood[value],
-                      },
-                    },
-                  },
-                  plugins: {
-                    legend: {
-                      display: true,
-                      position: "top",
-                      labels: {
-                        generateLabels: (chart) => {
-                          const datasets = chart.data.datasets;
-                          return datasets[0].data.map((value, index) => ({
-                            text: numberToMood[value],
-                            fillStyle: datasets[0].backgroundColor[index],
-                            strokeStyle: datasets[0].borderColor[index],
-                            lineWidth: 1,
-                            hidden: false,
-                            index: index,
-                          }));
-                        },
-                      },
-                    },
-                    tooltip: {
-                      callbacks: {
-                        label: (context) => {
-                          const label = context.dataset.label || "";
-                          const value = context.raw;
-                          return `${label}: ${numberToMood[value]}`;
-                        },
-                      },
-                    },
-                  },
-                }}
-              />
-            )}
-          </div>
+          <Chart
+            chartType={chartType}
+            chartData={chartData}
+            numberToMood={numberToMood}
+          />
         ) : (
           <p className="report__errorMessage">
             {errorMessage || "No data available for the selected duration."}
