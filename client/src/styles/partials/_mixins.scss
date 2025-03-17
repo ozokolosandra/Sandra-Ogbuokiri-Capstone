@@ -14,6 +14,13 @@
     }
 }
 
+@mixin mobile {
+    @media screen and (min-width:$mobile-breakpoint) {
+        @content;
+
+    }
+}
+
 @mixin background-gradient {
     background: linear-gradient(90deg,
             $background-colour1 0%,

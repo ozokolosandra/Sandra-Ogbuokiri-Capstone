@@ -2,11 +2,10 @@
     position: absolute;
     width: 60px;
     display: flex;
+    gap: 0.5rem;
     padding-top: 20px;
     padding: 0.4rem 0.8rem;
     transition: all 0.5s ease;
-
-
 
     &__header {
         text-align: center;
@@ -29,6 +28,11 @@
 
             &:hover {
                 background-color: #501b74;
+            }
+
+            &.active {
+                background-color: rgba(255, 255, 255, 0.2); // Highlight background
+                border-left: 4px solid #8a2be2; // Add a border or other indicator
             }
         }
     }
@@ -57,9 +61,7 @@
     position: relative;
     display: flex;
     flex-direction: row;
-    /* Align items horizontally */
     align-items: center;
-    /* Vertically align text and icon */
     margin-bottom: 20px;
     cursor: pointer;
 }
@@ -69,7 +71,6 @@
     height: 24px;
     transition: transform 0.2s ease-in-out;
     margin: 0 10px;
-    /* Add space between icon and text */
 }
 
 .nav-item:hover .nav-icon {
@@ -78,18 +79,12 @@
 
 .nav-text {
     visibility: hidden;
-
     margin-top: 0;
-
     font-size: 14px;
     color: #333;
     opacity: 0;
-    /* Invisible by default */
     transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
-    /* Delay visibility change until after opacity transition */
 }
-
-
 
 .tooltip {
     position: absolute;
