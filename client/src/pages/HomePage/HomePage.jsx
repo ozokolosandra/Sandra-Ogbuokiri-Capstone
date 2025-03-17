@@ -10,6 +10,16 @@ function HomePage({ name }) {
   const navigate = useNavigate();
   const [isSidebarActive, setIsSidebarActive] = useState(false);
 
+  // Check if the user is authenticated
+  useEffect(() => {
+    const token = localStorage.getItem("token"); // or sessionStorage
+
+    if (!token) {
+      // Redirect to the login page if no token is found
+      navigate("/login");
+    }
+  }, [navigate]);
+
   async function fetchMoods() {
     try {
       const response = await axios.get("http://localhost:8080/moods");
@@ -31,12 +41,11 @@ function HomePage({ name }) {
     <div>
       <Header />
       
-        <SideNav  />
-       
-          <AddVibes onCancel={() => navigate("/")} />
-        
-      </div>
-    
+      <SideNav  />
+     
+      <AddVibes onCancel={() => navigate("/")} />
+      
+    </div>
   );
 }
 
