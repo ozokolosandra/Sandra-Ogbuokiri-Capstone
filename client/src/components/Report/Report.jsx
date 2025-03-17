@@ -19,20 +19,20 @@ const Report = () => {
 
   // Mood colors mapping
   const moodColors = {
-    "Very Sad": "#FF6384",
-    Sad: "#36A2EB",
-    Neutral: "#FFCE56",
-    Happy: "#4BC0C0",
-    "Very Happy": "#9966FF",
-    Confident: "#FF9F40",
-    Triumphant: "#C9CBCF",
-    Anxious: "#FF6F61",
-    Stressed: "#6B5B95",
+    "very sad": "#FF6384",
+    "sad": "#36A2EB",
+    "neutral": "#FFCE56",
+    "happy": "#4BC0C0",
+    "very happy": "#9966FF",
+    "confident": "#FF9F40",
+    "triumphant": "#C9CBCF",
+    "anxious": "#FF6F61",
+    "stressed": "#6B5B95",
   };
 
   const fetchReports = async (start, end) => {
-    console.log(user_id);
-    
+    console.log("Fetching reports for:", { start, end, user_id });
+
     if (!user_id) {
       console.error("User ID is missing!");
       setErrorMessage("User ID is missing. Please log in again.");
@@ -47,60 +47,75 @@ const Report = () => {
       console.log("API Response:", response.data);
 
       const { mood_trends } = response.data;
+
+      // Ensure mood_trends is an object
+      if (typeof mood_trends !== "object" || mood_trends === null) {
+        throw new Error("Invalid mood_trends data");
+      }
+
+      // Transform mood_trends into an array of { mood_category, count }
       const moodData = Object.entries(mood_trends).map(([mood_category, count]) => ({
         mood_category,
         count,
       }));
 
-      const labels = moodData.map((mood) => mood.mood_category);
-      const counts = moodData.map((mood) => mood.count);
-      const backgroundColors = labels.map((mood) => moodColors[mood] || "#CCCCCC");
+      console.log("Mood Data:", moodData);
 
-      setChartData({
-        labels,
-        datasets: [
-          {
-            label: "Mood Over Time",
-            data: counts,
-            backgroundColor: backgroundColors,
-            borderColor: "#FFFFFF",
-            borderWidth: 1,
-          },
-        ],
-      });
+      if (moodData.length > 0) {
+        const labels = moodData.map((mood) => mood.mood_category);
+        const counts = moodData.map((mood) => mood.count);
+        console.log("Mood Categories:", moodData.map((mood) => mood.mood_category));
+
+        const backgroundColors = labels.map((mood) => moodColors[mood] || "#CCCCCC");
+
+        setChartData({
+          labels,
+          datasets: [
+            {
+              label: "Mood Over Time",
+              data: counts,
+              backgroundColor: backgroundColors,
+              borderColor: "#FFFFFF",
+              borderWidth: 1,
+            },
+          ],
+        });
+        setErrorMessage(""); // Clear error message
+      } else {
+        setErrorMessage("No mood data available for the selected duration.");
+        setChartData({ labels: [], datasets: [] }); // Clear chart data
+      }
     } catch (error) {
       console.error("Error fetching reports:", error);
       setErrorMessage("Failed to fetch reports. Please try again.");
+      setChartData({ labels: [], datasets: [] }); // Clear chart data on error
     }
   };
 
   const handleApplyCustomRange = () => {
     if (startDate && endDate) {
-      // Format dates as 'YYYY-MM-DD'
       const formattedStartDate = startDate.toISOString().split('T')[0];
       const formattedEndDate = endDate.toISOString().split('T')[0];
-      
       fetchReports(formattedStartDate, formattedEndDate);
     }
   };
 
   useEffect(() => {
+    console.log("useEffect triggered for:", { durationType, startDate, endDate });
+
     if (durationType === "weekly") {
       const end = new Date();
       const start = new Date();
       start.setDate(end.getDate() - 7);
-      
       fetchReports(start.toISOString().split('T')[0], end.toISOString().split('T')[0]);
     } else if (durationType === "monthly") {
       const end = new Date();
       const start = new Date();
       start.setMonth(end.getMonth() - 1);
-      
       fetchReports(start.toISOString().split('T')[0], end.toISOString().split('T')[0]);
     } else if (durationType === "custom" && startDate && endDate) {
       const formattedStartDate = startDate.toISOString().split('T')[0];
       const formattedEndDate = endDate.toISOString().split('T')[0];
-      
       fetchReports(formattedStartDate, formattedEndDate);
     }
   }, [durationType, startDate, endDate]);
@@ -132,13 +147,13 @@ const Report = () => {
           <DatePicker
             selected={startDate}
             onChange={(date) => setStartDate(date)}
-            dateFormat="yyyy-MM-dd"  // Ensures the correct format
+            dateFormat="yyyy-MM-dd"
           />
           <label className="report__datePickerLabel">End Date:</label>
           <DatePicker
             selected={endDate}
             onChange={(date) => setEndDate(date)}
-            dateFormat="yyyy-MM-dd"  // Ensures the correct format
+            dateFormat="yyyy-MM-dd"
           />
           <button className="report__applyButton" onClick={handleApplyCustomRange}>
             Apply
@@ -148,7 +163,7 @@ const Report = () => {
 
       <div className="report__chartContainer">
         {chartData.labels.length > 0 ? (
-          <Chart chartType={chartType} chartData={chartData} />
+          <Chart chartType={chartType} chartData={chartData} numberToMood={moodColors} />
         ) : (
           <p className="report__errorMessage">{errorMessage || "No data available."}</p>
         )}

@@ -1,6 +1,5 @@
-// ChartComponent.jsx
 import React from "react";
-import { Bar, Line } from "react-chartjs-2"; // Import both Bar and Line
+import { Bar, Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend } from "chart.js";
 
 // Register Chart.js components
@@ -16,6 +15,15 @@ ChartJS.register(
 );
 
 const Chart = ({ chartType, chartData, numberToMood }) => {
+  // Log the chartData and numberToMood props
+  console.log("Chart Data:", chartData);
+  console.log("Number to Mood Mapping:", numberToMood);
+
+  // Ensure chartData.datasets is defined
+  if (!chartData.datasets || chartData.datasets.length === 0) {
+    return <p>No data available for the chart.</p>;
+  }
+
   // Line chart specific styling
   const lineChartOptions = {
     responsive: true,
@@ -27,7 +35,7 @@ const Chart = ({ chartType, chartData, numberToMood }) => {
         min: 0,
         max: 9,
         ticks: {
-          callback: (value) => numberToMood[value],
+          callback: (value) => numberToMood[value] || value,
         },
       },
     },
@@ -36,15 +44,17 @@ const Chart = ({ chartType, chartData, numberToMood }) => {
         display: true,
         position: "top",
         labels: {
+          family:"Outfit",
+          size:14,
           generateLabels: (chart) => {
             const datasets = chart.data.datasets;
-            return datasets[0].data.map((value, index) => ({
-              text: numberToMood[value],
-              fillStyle: datasets[0].backgroundColor[index],
-              strokeStyle: datasets[0].borderColor[index],
-              lineWidth: 1,
-              hidden: false,
-              index: index,
+            return datasets.map((dataset) => ({
+              text: dataset.label || "",
+              fillStyle: dataset.backgroundColor,
+              strokeStyle: dataset.borderColor,
+              lineWidth: 0,
+              hidden: !chart.isDatasetVisible(dataset.index),
+              index: dataset.index,
             }));
           },
         },
@@ -54,7 +64,7 @@ const Chart = ({ chartType, chartData, numberToMood }) => {
           label: (context) => {
             const label = context.dataset.label || "";
             const value = context.raw;
-            return `${label}: ${numberToMood[value]}`;
+            return `${label}: ${numberToMood[value] || value}`;
           },
         },
       },
@@ -76,24 +86,24 @@ const Chart = ({ chartType, chartData, numberToMood }) => {
         min: 0,
         max: 9,
         ticks: {
-          callback: (value) => numberToMood[value],
+          callback: (value) => numberToMood[value] || value,
         },
       },
     },
     plugins: {
       legend: {
-        display: true,
+        display: false,
         position: "top",
         labels: {
           generateLabels: (chart) => {
             const datasets = chart.data.datasets;
-            return datasets[0].data.map((value, index) => ({
-              text: numberToMood[value],
-              fillStyle: datasets[0].backgroundColor[index],
-              strokeStyle: datasets[0].borderColor[index],
-              lineWidth: 1,
-              hidden: false,
-              index: index,
+            return datasets.map((dataset) => ({
+              text: dataset.label || "",
+              fillStyle: dataset.backgroundColor,
+              strokeStyle: dataset.borderColor,
+              lineWidth: 0,
+              hidden: !chart.isDatasetVisible(dataset.index),
+              index: dataset.index,
             }));
           },
         },
@@ -103,7 +113,7 @@ const Chart = ({ chartType, chartData, numberToMood }) => {
           label: (context) => {
             const label = context.dataset.label || "";
             const value = context.raw;
-            return `${label}: ${numberToMood[value]}`;
+            return `${label}: ${numberToMood[value] || value}`;
           },
         },
       },
@@ -115,21 +125,7 @@ const Chart = ({ chartType, chartData, numberToMood }) => {
       {chartType === "bar" ? (
         <Bar data={chartData} options={barChartOptions} />
       ) : (
-        <Line
-          data={chartData}
-          options={{
-            ...lineChartOptions,
-            datasets: [
-              {
-                label: "Mood Over Time",
-                data: chartData.datasets[0].data, // Use the same data as before
-                backgroundColor: chartData.datasets[0].backgroundColor,
-                borderColor: "#800080", // Set the stroke color to purple
-                borderWidth: 2,
-              },
-            ],
-          }}
-        />
+        <Line data={chartData} options={lineChartOptions} />
       )}
     </div>
   );

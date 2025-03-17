@@ -14,19 +14,29 @@ const getReport = async (req, res) => {
     // Validate date formats
     const isValidDate = (dateString) => /^\d{4}-\d{2}-\d{2}$/.test(dateString);
     if (startDate && !isValidDate(startDate)) {
-      return res.status(400).json({ error: "Invalid start date format. DD-MM-YYYY." });
+      return res
+        .status(400)
+        .json({ error: "Invalid start date format. Use YYYY-MM-DD." });
     }
     if (endDate && !isValidDate(endDate)) {
-      return res.status(400).json({ error: "Invalid end date format. Use DD-MM-YYYY." });
+      return res
+        .status(400)
+        .json({ error: "Invalid end date format. Use YYYY-MM-DD." });
     }
-    
-    let query = knex("mood")
+
+    const query = knex("mood")
       .select("mood_category", "created_at")
       .where("user_id", user_id);
-      console.log(`Received user_id: ${user_id}`);
 
-    if (startDate) query = query.where("created_at", ">=", new Date(startDate));
-    if (endDate) query = query.where("created_at", "<=", new Date(endDate));
+    if (startDate) {
+      query.where("created_at", ">=", new Date(startDate + "T00:00:00Z"));
+    }
+    if (endDate) {
+      query.where("created_at", "<=", new Date(endDate + "T23:59:59Z"));
+    }
+
+    // Log the SQL query for debugging
+    console.log("Generated SQL Query: ", query.toString());
 
     const moods = await query;
 
@@ -36,7 +46,7 @@ const getReport = async (req, res) => {
 
     // Handle empty mood data
     if (moods.length === 0) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         message: `No mood data found for user ID: ${user_id}.`,
       });
     }
@@ -47,46 +57,30 @@ const getReport = async (req, res) => {
       moodCounts[mood_category] = (moodCounts[mood_category] || 0) + 1;
     });
 
-    // Determine the most common mood (handle ties)
-    const maxCount = Math.max(...Object.values(moodCounts));
-    const mostCommonMoods = Object.keys(moodCounts).filter(
-      (mood) => moodCounts[mood] === maxCount
-    );
-    const mostCommonMood = mostCommonMoods.join(", "); // Join ties with a comma
-
-    
+    // Construct report data
     const reportData = {
       mood_trends: moodCounts,
-      most_common_mood: mostCommonMood,
       time_period: {
         start_date: startDate || "No start date provided",
         end_date: endDate || "No end date provided",
       },
     };
 
-    // Log additional info for debugging
-    console.log(`User ID: ${user_id}`);
-    console.log(`Start Date: ${startDate}`);
-    console.log(`End Date: ${endDate}`);
-    console.log(`Report Data: ${JSON.stringify(reportData)}`);
-
-    
-    
     res.status(200).json(reportData);
   } catch (error) {
-    console.error("Error retrieving reports:", { 
-      message: error.message, 
-      stack: error.stack, 
+    console.error("Error retrieving reports:", {
+      message: error.message,
+      stack: error.stack,
       query: req.query,
     });
-    res.status(500).json({ error: `Error retrieving reports: ${error.message}` });
+    res
+      .status(500)
+      .json({ error: `Error retrieving reports: ${error.message}` });
   }
 };
-  
 
 const createReport = async (req, res) => {
   try {
-    // Extract user_id and report_data from req.body
     const { user_id, report_data } = req.body;
 
     // Validate required fields
@@ -97,19 +91,19 @@ const createReport = async (req, res) => {
     // Insert the new report
     const [insertedId] = await knex("reports").insert({
       user_id,
-      report_data,
+      report_data: JSON.stringify(report_data), // Store report data as JSON
     });
 
     // Fetch the newly inserted report using the inserted ID
     const newReport = await knex("reports").where("id", insertedId).first();
 
-    console.log("Inserted report:", newReport); // Debugging: log the inserted report
     res.status(201).json(newReport); // Send the new report as the response
   } catch (error) {
-    console.error("Error inserting report:", error); // Debugging: log the error
+    console.error("Error inserting report:", error);
     res.status(500).json({ error: `An error occurred: ${error.message}` });
   }
 };
+
 const getReportById = async (req, res) => {
   try {
     const { id } = req.params;

@@ -139,6 +139,7 @@ const createMood = async (req, res) => {
 
       console.log(`Mood Category: ${mood_category}`);
       console.log("Uplifting Message Retrieved:", uplifting_message);
+      console.log("Hugging Face API Response:", hfResult);
 
       // Insert into database
       const [newMoodId] = await knex("mood").insert({
