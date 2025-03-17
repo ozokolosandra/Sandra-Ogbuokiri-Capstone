@@ -16,12 +16,12 @@ function ReportPage() {
   return (
     <div>
       <Header />
-      <div className="report__dashboard">
+      
         <SideNav className="side-nav" isActive={isSidebarActive} toggleSidebar={toggleSidebar} />
         <div className={`report ${isSidebarActive ? "active" : ""}`}>
           <Report className="report-container" />
         </div>
-      </div>
+      
     </div>
   );
 }

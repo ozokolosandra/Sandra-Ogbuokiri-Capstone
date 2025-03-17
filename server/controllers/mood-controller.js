@@ -1,17 +1,18 @@
-
 import initKnex from "knex";
 import configuration from "../knexfile.js";
 
 const knex = initKnex(configuration);
 
 // Hugging Face API configuration
-// Note: The endpoint includes the organization/model-name structure.
 const HF_API_URL =
   "https://api-inference.huggingface.co/models/distilbert/distilbert-base-uncased-finetuned-sst-2-english";
-const HF_API_TOKEN ="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";
+const HF_API_TOKEN = "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";
 
-// Helper function to call the Hugging Face Inference API for sentiment analysis.
-async function analyzeSentimentHF(text) {
+/**
+ * Calls Hugging Face API for sentiment analysis.
+ * Retries up to 3 times if the API is down (503 error).
+ */
+async function analyzeSentimentHF(text, retries = 3) {
   try {
     const response = await fetch(HF_API_URL, {
       method: "POST",
@@ -23,122 +24,140 @@ async function analyzeSentimentHF(text) {
     });
 
     if (!response.ok) {
-      // Log any error message returned by the API.
+      if (response.status === 503 && retries > 0) {
+        console.log("Hugging Face API unavailable. Retrying in 5 seconds...");
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        return analyzeSentimentHF(text, retries - 1);
+      }
+
       const errorDetails = await response.text();
       console.error("Error response from Hugging Face:", errorDetails);
       throw new Error("Failed sentiment analysis request");
     }
 
     const result = await response.json();
-    return result; // Expected format: [{ label: "POSITIVE", score: 0.98 }, ...]
+    return result; // Expected format: [[{"label":"POSITIVE","score":0.99},{"label":"NEGATIVE","score":0.01}]]
   } catch (error) {
     console.error("Error fetching from Hugging Face:", error);
-    throw error;
+    return [{ label: "Neutral", score: 0.5 }]; // Fallback response
   }
 }
 
-
+/**
+ * Categorizes the sentiment based on Hugging Face response.
+ */
 const categorizeSentiment = (hfResult) => {
- 
-    if (!Array.isArray(hfResult) || hfResult.length === 0 || !Array.isArray(hfResult[0])) {
-      return "Neutral"; 
-    }
-  
-    // Extract the first result (POSITIVE/NEGATIVE with scores)
-    const [positive, negative] = hfResult[0];
-  
-    // Determine the dominant sentiment
-    if (positive.label === "POSITIVE" && positive.score >= 0.9) {
-      return "Very Happy";
-    } else if (positive.label === "POSITIVE" && positive.score >= 0.75) {
-      return "Happy";
-    } else if (negative.label === "NEGATIVE" && negative.score >= 0.9) {
-      return "Very Sad";
-    } else if (negative.label === "NEGATIVE" && negative.score >= 0.75) {
-      return "Sad";
-    } else {
-      return "Neutral";
-    }
-  };
+  if (!Array.isArray(hfResult) || hfResult.length === 0) {
+    return "Neutral"; 
+  }
 
-// Get all moods from the database.
+  const sentimentData = hfResult[0]; // Extract first array element
+  const positive = sentimentData.find((item) => item.label === "POSITIVE");
+  const negative = sentimentData.find((item) => item.label === "NEGATIVE");
+
+  if (!positive || !negative) return "Neutral";
+
+  if (positive.score >= 0.9) return "Very Happy";
+  if (positive.score >= 0.75) return "Happy";
+  if (negative.score >= 0.9) return "Very Sad";
+  if (negative.score >= 0.75) return "Sad";
+  
+  return "Neutral";
+};
+
+/**
+ * Gets all moods from the database.
+ */
 const getAllMoods = async (req, res) => {
-    try {
-      const data = await knex("mood")
-        .select(
-          "mood.id",
-          "mood.mood_text",
-          "mood.mood_category",
-          "mood.user_id",
-          "uplifting_messages.message AS uplifting_message" // Include the message dynamically
-        )
-        .leftJoin(
-          "uplifting_messages",
-          "mood.mood_category",
-          "uplifting_messages.mood_category"
-        );
-  
-      res.status(200).json(data);
-    } catch (error) {
-      console.error("Error retrieving moods:", error);
-      res.status(400).send(`Error retrieving moods: ${error}`);
-    }
-  };
-  
-// Create a new mood entry using sentiment analysis from the Hugging Face API.
+  try {
+    const data = await knex("mood")
+      .select(
+        "mood.id",
+        "mood.mood_text",
+        "mood.mood_category",
+        "mood.user_id",
+        "uplifting_messages.message AS uplifting_message"
+      )
+      .leftJoin(
+        "uplifting_messages",
+        "mood.mood_category",
+        "uplifting_messages.mood_category"
+      );
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Error retrieving moods:", error);
+    res.status(400).send(`Error retrieving moods: ${error}`);
+  }
+};
+
+
+const defaultMessages = {
+  "very happy": "You're on top of the world! Keep shining!",
+  "happy": "Keep smiling and spreading joy!",
+  "neutral": "Stay positive and take things one step at a time.",
+  "sad": "It's okay to feel down sometimes. Tomorrow is a new day.",
+  "very sad": "Things will get better. You're stronger than you think.",
+};
+
 const createMood = async (req, res) => {
-    try {
+  try {
       const { mood_text, user_id } = req.body;
-  
-      // Validate required fields
+
       if (!mood_text || !user_id) {
-        return res.status(400).json({ error: "mood_text and user_id are required!" });
+          return res.status(400).json({ error: "mood_text and user_id are required!" });
       }
-  
-      // Analyze sentiment using the Hugging Face API
+
+      
       const hfResult = await analyzeSentimentHF(mood_text);
       console.log("Hugging Face API Response:", hfResult);
-  
-      // Categorize the sentiment based on the Hugging Face response
-      const mood_category = categorizeSentiment(hfResult);
-  
-      // Fetch a random uplifting message for the determined mood category
-      const upliftingMessage = await knex("uplifting_messages")
-        .whereRaw("LOWER(mood_category) = LOWER(?)", [mood_category])
-        .orderByRaw("RAND()")
-        .first();
-  
-      const uplifting_message = upliftingMessage
-        ? upliftingMessage.message
-        : "Stay positive!";
-  
+
+      // Categorize mood
+      let mood_category = categorizeSentiment(hfResult);
+      mood_category = mood_category.toLowerCase(); 
+
+      
+      const categoryExists = await knex("uplifting_messages")
+          .whereRaw("LOWER(mood_category) = LOWER(?)", [mood_category])
+          .first();
+
+      if (!categoryExists) {
+          console.warn(`Mood category '${mood_category}' does not exist in uplifting_messages. Using fallback.`);
+          mood_category = "neutral"; // Fallback to a default lowercase category that exists
+      }
+
+
+      const upliftingMessageRecord = await knex("uplifting_messages")
+          .whereRaw("LOWER(mood_category) = LOWER(?)", [mood_category])
+          .orderByRaw("RAND()")
+          .first();
+
+      const uplifting_message =
+          upliftingMessageRecord && upliftingMessageRecord.message && upliftingMessageRecord.message.trim() !== ""
+              ? upliftingMessageRecord.message
+              : defaultMessages[mood_category] || "Stay positive!"; 
+
       console.log(`Mood Category: ${mood_category}`);
-      console.log("Uplifting Message Retrieved:", upliftingMessage);
-  
-      // Insert the new mood entry into the database
+      console.log("Uplifting Message Retrieved:", uplifting_message);
+
+      // Insert into database
       const [newMoodId] = await knex("mood").insert({
-        mood_text,
-        mood_category,
-        user_id,
+          mood_text,
+          mood_category,
+          user_id,
       });
-  
-      // Retrieve the newly inserted mood and include the uplifting message in the response
+
       const newMood = await knex("mood").where("id", newMoodId).first();
-  
-      // Add the uplifting_message to the response
-      const response = {
-        ...newMood,
-        uplifting_message, // Attach the uplifting message to the response dynamically
-      };
-  
-      res.status(201).json(response);
-    } catch (error) {
+
+      res.status(201).json({ ...newMood, uplifting_message });
+  } catch (error) {
       console.error("Error creating mood:", error);
       res.status(500).json({ error: `An error occurred: ${error.message}` });
-    }
-  };
-  
-// Get a certain mood entry by its id.
+  }
+};
+/**
+ * Gets a single mood entry by ID.
+ */
 const getMoodById = async (req, res) => {
   try {
     const { id } = req.params;

@@ -1,7 +1,8 @@
 @use "../../styles/partials/variables" as *;
 
-.reports {
+.report {
     padding-left: 1rem;
+    margin-top: 7rem;
 
     &__container {
         width: 80%;
@@ -10,57 +11,105 @@
 
         & h3 {
             margin: 32px;
-
         }
     }
 
-
-
-
     &__durationPicker {
         margin-bottom: 20px;
-
-
     }
 
     &__customDatePicker {
         margin-top: 10px;
-
-        ; // Add spacing between elements
     }
-
 
     &__datePickerLabel {
         margin-right: 10px;
-
-
     }
 
     &__applyButton {
         margin-left: 10px;
         padding: 5px 10px;
-        background-color: $button-color; // Use variable for button color
+        background-color: $button-color;
         color: white;
-        border: 5px solid$button-color;
+        border: 5px solid $button-color;
         border-radius: 20px;
         cursor: pointer;
 
         &:hover {
-            background-color: darken($button-color, 10%); // Use variable for hover effect
+            background-color: darken($button-color, 10%);
         }
-
-
     }
 
     &__chartContainer {
         margin-top: 20px;
-        min-height: 300px; // Set a minimum height for the chart
-
-
+        min-height: 300px;
     }
 
     &__errorMessage {
-        //color: red;
         margin-top: 20px;
+    }
+
+    // Styles for the chart container
+    &__chart {
+
+        // Target the chart canvas
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            background-color: #f9f9f9;
+            height: 350px;
+        }
+
+        // Target the legend
+        .chartjs-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+
+            // Legend items
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+
+                // Legend color box
+                .legend-color-box {
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 3px;
+                }
+
+                // Legend text
+                .legend-text {
+                    font-size: 14px;
+                    color: #333;
+                }
+            }
+        }
+
+        // Target tooltips
+        .chartjs-tooltip {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 12px;
+            pointer-events: none;
+        }
+    }
+}
+
+.report__durationPicker {
+    margin-bottom: 20px;
+
+    label {
+        margin-right: 10px;
+    }
+
+    select {
+        padding: 5px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
     }
 }

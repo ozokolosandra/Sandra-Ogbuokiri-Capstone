@@ -5,7 +5,7 @@ const reportRouter = express.Router();
 
 reportRouter.route("/")
 .get(reportController.getReport)
-.post(reportController.createReport)
+
 ;
 reportRouter.route("/:id")
 .get(reportController.getReportById)
