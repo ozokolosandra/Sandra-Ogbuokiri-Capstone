@@ -1,6 +1,7 @@
 import React from "react";
 import { Bar, Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend } from "chart.js";
+import "./Chart.scss"; // Import the SCSS file
 
 // Register Chart.js components
 ChartJS.register(
@@ -15,9 +16,6 @@ ChartJS.register(
 );
 
 const Chart = ({ chartType, chartData, numberToMood }) => {
-  // Log the chartData and numberToMood props
-  console.log("Chart Data:", chartData);
-  console.log("Number to Mood Mapping:", numberToMood);
 
   // Ensure chartData.datasets is defined
   if (!chartData.datasets || chartData.datasets.length === 0) {
@@ -44,8 +42,8 @@ const Chart = ({ chartType, chartData, numberToMood }) => {
         display: true,
         position: "top",
         labels: {
-          family:"Outfit",
-          size:14,
+          family: "Outfit",
+          size: 14,
           generateLabels: (chart) => {
             const datasets = chart.data.datasets;
             return datasets.map((dataset) => ({
@@ -77,12 +75,12 @@ const Chart = ({ chartType, chartData, numberToMood }) => {
     maintainAspectRatio: false,
     scales: {
       x: {
-        title: { display: true, text: "Time Period" },
+        title: { display: true, text: "Vibes" },
         barThickness: 20,
         categoryPercentage: 0.3,
       },
       y: {
-        title: { display: true, text: "Mood" },
+        title: { display: true, text: "Frequency of Vibes" },
         min: 0,
         max: 9,
         ticks: {
@@ -122,6 +120,7 @@ const Chart = ({ chartType, chartData, numberToMood }) => {
 
   return (
     <div className="report__chart">
+      {/* Chart Rendering */}
       {chartType === "bar" ? (
         <Bar data={chartData} options={barChartOptions} />
       ) : (

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./Report.scss";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Chart from "../Chart/Chart";
+import downloadIcon from "../../assets/images/download.svg"; // Import the download icon
 
 const Report = () => {
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
@@ -12,6 +13,9 @@ const Report = () => {
   const [endDate, setEndDate] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [chartType, setChartType] = useState("bar");
+
+  // Ref to access the chart instance
+  const chartRef = useRef(null);
 
   // Retrieve user details from localStorage
   const user_id = localStorage.getItem("user_id");
@@ -28,6 +32,24 @@ const Report = () => {
     "triumphant": "#C9CBCF",
     "anxious": "#FF6F61",
     "stressed": "#6B5B95",
+  };
+
+  // Function to download the chart as an image
+  const downloadChart = () => {
+    const chart = chartRef.current;
+
+    if (chart) {
+      // Convert the chart to a base64 image
+      const image = chart.toBase64Image("image/png", 1.0);
+
+      // Create a temporary <a> element to trigger the download
+      const link = document.createElement("a");
+      link.href = image;
+      link.download = "chart.png"; // Set the filename for the downloaded image
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
   const fetchReports = async (start, end) => {
@@ -124,6 +146,12 @@ const Report = () => {
     <div className="report__container">
       <h3>Vibes Chart for {user_name}</h3>
 
+      {/* Download Button */}
+      <button
+        onClick={downloadChart} className="download-button" >
+        <img src={downloadIcon} alt="Download" className="download-icon"/>
+      </button>
+
       <div className="report__durationPicker">
         <label>Select Chart Type:</label>
         <select value={chartType} onChange={(e) => setChartType(e.target.value)}>
@@ -163,7 +191,7 @@ const Report = () => {
 
       <div className="report__chartContainer">
         {chartData.labels.length > 0 ? (
-          <Chart chartType={chartType} chartData={chartData} numberToMood={moodColors} />
+          <Chart ref={chartRef} chartType={chartType} chartData={chartData} numberToMood={moodColors} />
         ) : (
           <p className="report__errorMessage">{errorMessage || "No data available."}</p>
         )}
