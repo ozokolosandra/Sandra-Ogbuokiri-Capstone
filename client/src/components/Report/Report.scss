@@ -1,7 +1,7 @@
 @use "../../styles/partials/variables" as *;
 
 .report {
-    padding-left: 1rem;
+    padding-left: 0.5rem;
     margin-top: 7rem;
 
     &__container {
@@ -10,7 +10,7 @@
         margin-top: 1rem;
 
         & h3 {
-            margin: 32px;
+            margin: 2rem 0.5rem;
         }
     }
 
@@ -26,8 +26,18 @@
         margin-right: 10px;
     }
 
+    &__start-date {
+        display: flex;
+    }
+
+    &__end-date {
+        display: flex;
+        margin-bottom: 2rem;
+    }
+
     &__applyButton {
-        margin-left: 10px;
+        margin: 1rem;
+        width: 90%;
         padding: 5px 10px;
         background-color: $button-color1;
         color: $white;
@@ -49,39 +59,38 @@
         margin-top: 20px;
     }
 
-    // Styles for the chart container
+
     &__chart {
 
-        // Target the chart canvas
+
         canvas {
             border: 1px solid #ddd;
             border-radius: 20px;
             background-color: #f9f9f9;
             height: 350px;
-            width: 500px;
+            width: 100%;
         }
 
-        // Target the legend
         .chartjs-legend {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 20px;
 
-            // Legend items
+
             .legend-item {
                 display: flex;
                 align-items: center;
                 gap: 5px;
 
-                // Legend color box
+
                 .legend-color-box {
                     width: 12px;
                     height: 12px;
                     border-radius: 3px;
                 }
 
-                // Legend text
+
                 .legend-text {
                     font-size: 14px;
                     color: #333;
@@ -121,8 +130,8 @@
     border: none;
     cursor: pointer;
     position: absolute;
-    bottom: 14.375rem;
-    right: -0.625rem;
+    bottom: 13.375rem;
+    right: 0.075rem;
     padding: 0;
     margin: 0;
 

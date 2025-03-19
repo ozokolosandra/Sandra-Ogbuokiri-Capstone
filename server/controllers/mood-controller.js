@@ -36,10 +36,10 @@ async function analyzeSentimentHF(text, retries = 3) {
     }
 
     const result = await response.json();
-    return result; // Expected format: [[{"label":"POSITIVE","score":0.99},{"label":"NEGATIVE","score":0.01}]]
+    return result; 
   } catch (error) {
     console.error("Error fetching from Hugging Face:", error);
-    return [{ label: "Neutral", score: 0.5 }]; // Fallback response
+    return [{ label: "Neutral", score: 0.5 }]; 
   }
 }
 
@@ -68,7 +68,7 @@ const categorizeSentiment = (hfResult) => {
 /**
  * Gets all moods from the database.
  */
-const getAllMoods = async (req, res) => {
+const getAllMoods = async (_req, res) => {
   try {
     const data = await knex("mood")
       .select(
@@ -93,11 +93,11 @@ const getAllMoods = async (req, res) => {
 
 
 const defaultMessages = {
-  "very happy": "You're on top of the world! Keep shining!",
-  "happy": "Keep smiling and spreading joy!",
-  "neutral": "Stay positive and take things one step at a time.",
-  "sad": "It's okay to feel down sometimes. Tomorrow is a new day.",
-  "very sad": "Things will get better. You're stronger than you think.",
+  "Very Happy": "You're on top of the world! Keep shining!",
+  "Happy": "Keep smiling and spreading joy!",
+  "Neutral": "Stay positive and take things one step at a time.",
+  "Sad": "It's okay to feel down sometimes. Tomorrow is a new day.",
+  "Very sad": "Things will get better. You're stronger than you think.",
 };
 
 const createMood = async (req, res) => {
@@ -114,23 +114,24 @@ const createMood = async (req, res) => {
 
       // Categorize mood
       let mood_category = categorizeSentiment(hfResult);
-      mood_category = mood_category.toLowerCase(); 
+      //mood_category = mood_category.toLowerCase(); 
 
       
       const categoryExists = await knex("uplifting_messages")
-          .whereRaw("LOWER(mood_category) = LOWER(?)", [mood_category])
+          .whereRaw("mood_category = ?", [mood_category])
           .first();
 
-      if (!categoryExists) {
-          console.warn(`Mood category '${mood_category}' does not exist in uplifting_messages. Using fallback.`);
-          mood_category = "neutral"; // Fallback to a default lowercase category that exists
-      }
+      // if (!categoryExists) {
+      //     console.warn(`Mood category '${mood_category}' does not exist in uplifting_messages. Using fallback.`);
+      //     mood_category = "Neutral"; 
+      // }
 
 
       const upliftingMessageRecord = await knex("uplifting_messages")
-          .whereRaw("LOWER(mood_category) = LOWER(?)", [mood_category])
-          .orderByRaw("RAND()")
-          .first();
+      .whereRaw("mood_category = ?", [mood_category])
+      .orderByRaw("RAND()")
+      .first();
+      
 
       const uplifting_message =
           upliftingMessageRecord && upliftingMessageRecord.message && upliftingMessageRecord.message.trim() !== ""

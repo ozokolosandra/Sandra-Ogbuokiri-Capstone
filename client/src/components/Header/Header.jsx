@@ -1,12 +1,14 @@
-import "./Header.scss";
+import React from 'react';
+import './Header.scss'; // Import the SCSS file
 
-function Header({ name }) {
+const Logo = () => {
   return (
     <div className="header">
-      <h1>Vibes Radar</h1>
-      <div className="header__title"></div>
+      <span className="header__add">Vibes </span>
+      <span className="header__heart"> ♥ </span>
+      <span className="header__vibes"> Radar</span>
     </div>
   );
-}
+};
 
-export default Header;
+export default Logo;

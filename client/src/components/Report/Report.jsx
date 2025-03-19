@@ -4,7 +4,7 @@ import "./Report.scss";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Chart from "../Chart/Chart";
-import downloadIcon from "../../assets/images/download.svg"; // Import the download icon
+import downloadIcon from "../../assets/images/download.svg";
 
 const Report = () => {
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
@@ -23,15 +23,15 @@ const Report = () => {
 
   // Mood colors mapping
   const moodColors = {
-    "very sad": "#FF6384",
-    "sad": "#36A2EB",
-    "neutral": "#FFCE56",
-    "happy": "#4BC0C0",
-    "very happy": "#9966FF",
-    "confident": "#FF9F40",
-    "triumphant": "#C9CBCF",
-    "anxious": "#FF6F61",
-    "stressed": "#6B5B95",
+    "Very Sad": "#FF6384",
+    "Sad": "#36A2EB",
+    "Neutral": "#FFCE56",
+    "Happy": "#4BC0C0",
+    "Very Happy": "#9966FF",
+    "Confident": "#FF9F40",
+    "Triumphant": "#C9CBCF",
+    "Anxious": "#FF6F61",
+    "Stressed": "#6B5B95",
   };
 
   // Function to download the chart as an image
@@ -52,6 +52,7 @@ const Report = () => {
     }
   };
 
+  // Fetch reports logic
   const fetchReports = async (start, end) => {
     console.log("Fetching reports for:", { start, end, user_id });
 
@@ -147,10 +148,9 @@ const Report = () => {
       <h3>Vibes Chart for {user_name}</h3>
 
       {/* Download Button */}
-      <button
-        onClick={downloadChart} className="download-button" >
-        <img src={downloadIcon} alt="Download" className="download-icon"/>
-      </button>
+      {/* <button onClick={downloadChart} className="download-button">
+        <img src={downloadIcon} alt="Download" className="download-icon" />
+      </button> */}
 
       <div className="report__durationPicker">
         <label>Select Chart Type:</label>
@@ -171,18 +171,23 @@ const Report = () => {
 
       {durationType === "custom" && (
         <div className="report__customDatePicker">
-          <label className="report__datePickerLabel">Start Date:</label>
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-            dateFormat="yyyy-MM-dd"
-          />
-          <label className="report__datePickerLabel">End Date:</label>
-          <DatePicker
-            selected={endDate}
-            onChange={(date) => setEndDate(date)}
-            dateFormat="yyyy-MM-dd"
-          />
+          <div className="report__start-date">
+            <label className="report__datePickerLabel">Start Date:</label>
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+              dateFormat="yyyy-MM-dd"
+            />
+          </div>
+
+          <div className="report__end-date">
+            <label className="report__datePickerLabel">End Date:</label>
+            <DatePicker
+              selected={endDate}
+              onChange={(date) => setEndDate(date)}
+              dateFormat="yyyy-MM-dd"
+            />
+          </div>
           <button className="report__applyButton" onClick={handleApplyCustomRange}>
             Apply
           </button>

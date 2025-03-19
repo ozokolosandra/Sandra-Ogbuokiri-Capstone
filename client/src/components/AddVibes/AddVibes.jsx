@@ -17,7 +17,7 @@ function AddVibes({ user, onCancel }) {
           alert("Please select a date and enter your mood.");
           return;
         }
-      
+        //console.log(response.data);
         try {
           const response = await axios.post("http://localhost:8080/moods", {
             mood_text: moodText,

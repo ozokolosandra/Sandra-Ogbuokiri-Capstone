@@ -1,7 +1,7 @@
 import React from "react";
 import { Bar, Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend } from "chart.js";
-import "./Chart.scss"; // Import the SCSS file
+import "./Chart.scss"; 
 
 // Register Chart.js components
 ChartJS.register(
@@ -15,8 +15,9 @@ ChartJS.register(
   Legend
 );
 
-const Chart = ({ chartType, chartData, numberToMood }) => {
+const Chart = ({ chartType, chartData, numberToMood },ref) => {
 
+  
   // Ensure chartData.datasets is defined
   if (!chartData.datasets || chartData.datasets.length === 0) {
     return <p>No data available for the chart.</p>;
@@ -122,9 +123,9 @@ const Chart = ({ chartType, chartData, numberToMood }) => {
     <div className="report__chart">
       {/* Chart Rendering */}
       {chartType === "bar" ? (
-        <Bar data={chartData} options={barChartOptions} />
+        <Bar ref ={ref} data={chartData} options={barChartOptions} />
       ) : (
-        <Line data={chartData} options={lineChartOptions} />
+        <Line ref = {ref}data={chartData} options={lineChartOptions} />
       )}
     </div>
   );
