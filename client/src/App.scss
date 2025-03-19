@@ -1,9 +1,0 @@
-@use "./styles/partials/global" as *;
-@use "./styles/partials/mixins" as *;
-@use "./styles/partials/variables" as *;
-
-body {
-    box-sizing: border-box;
-    background-color: $background-colour;
-    color: $text-color // @include background-gradient
-}

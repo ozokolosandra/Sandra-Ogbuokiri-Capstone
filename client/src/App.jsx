@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.scss';
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import LogoutPage from "./pages/LogoutPage/LogoutPage"
 import HomePage from './pages/HomePage/HomePage';
 import ReportPage from "./pages/ReportPage/ReportPage";
@@ -13,7 +14,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />  
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/logout" element={<LogoutPage />} />    
-        {/* <Route path="*" element={<NotFoundPage />} /> */}
+        <Route path="*" element={<NotFoundPage />} />
         <Route path="/report" element={<ReportPage />} /> 
       </Routes>
     </BrowserRouter>

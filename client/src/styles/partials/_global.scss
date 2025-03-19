@@ -1,5 +1,15 @@
+@use "./mixins" as *;
 @use "./typography" as *;
+@use "./variables" as *;
 
+
+
+
+body {
+    box-sizing: border-box;
+    background-color: $background-colour;
+    color: $text-color ;
+}
 
 * {
     font-family: "Outfit";
