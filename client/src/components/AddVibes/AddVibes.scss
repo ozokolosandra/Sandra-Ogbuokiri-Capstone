@@ -32,6 +32,23 @@
         flex-direction: column;
         width: 50%;
     }
+
+    &__error {
+        display: flex;
+        align-items: center;
+        color: $error;
+        margin-bottom: 0.9375rem;
+        margin-top: 0.625rem;
+
+        &__icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        &__message {
+            font-size: 14px;
+        }
+    }
 }
 
 .form {
@@ -47,6 +64,9 @@
     justify-content: space-between;
     gap: 0.25rem;
 }
+
+
+
 
 .submit-btn {
     border: 1px solid $button-color2;
@@ -70,6 +90,8 @@ textarea {
     padding: 10px;
     border-radius: 8px;
 }
+
+
 
 .uplifting-message {
     opacity: 0;
