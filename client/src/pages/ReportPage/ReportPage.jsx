@@ -1,17 +1,16 @@
 import React, { useState, useRef } from "react";
-import Report from '../../components/Report/Report';
-import Header from '../../components/Header/Header';
-import SideNav from '../../components/SideNav/SideNav';
-import { useNavigate } from "react-router-dom";
+import Report from "../../components/Report/Report";
+import Header from "../../components/Header/Header";
+import SideNav from "../../components/SideNav/SideNav";
 import "./ReportPage.scss";
 
 function ReportPage() {
-  const navigate = useNavigate();
-  const [isSidebarActive, setIsSidebarActive] = useState(false);
-  const chartRef = useRef(null); // Ref to access the chart instance
+  const [isSideNavVisible, setIsSideNavVisible] = useState(false); // State to manage SideNav visibility
+  const chartRef = useRef(null); // Ref for the chart
 
-  const toggleSidebar = () => {
-    setIsSidebarActive((prev) => !prev);
+  // Toggle SideNav visibility
+  const toggleSideNav = () => {
+    setIsSideNavVisible(!isSideNavVisible);
   };
 
   // Function to download the chart as an image
@@ -34,14 +33,18 @@ function ReportPage() {
 
   return (
     <div>
-      <Header />
+      {/* Pass toggleSideNav to Header */}
+      <Header toggleSideNav={toggleSideNav} />
+
+      {/* Pass isSideNavVisible and toggleSideNav to SideNav */}
       <SideNav
-        className="side-nav"
-        isActive={isSidebarActive}
-        toggleSidebar={toggleSidebar}
+        isSideNavVisible={isSideNavVisible}
+        toggleSideNav={toggleSideNav}
         downloadChart={downloadChart} // Pass the download function to SideNav
       />
-      <div className={`report ${isSidebarActive ? "active" : ""}`}>
+
+      {/* Main content area */}
+      <div className={`report ${isSideNavVisible ? "active" : ""}`}>
         <Report
           className="report-container"
           chartRef={chartRef} // Pass the ref to Report

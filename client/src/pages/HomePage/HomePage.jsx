@@ -9,6 +9,10 @@ import "./HomePage.scss";
 function HomePage() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [isSideNavVisible, setIsSideNavVisible] = useState(false);
+  const toggleSideNav = () => {
+    setIsSideNavVisible(!isSideNavVisible); 
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -31,8 +35,8 @@ function HomePage() {
 
   return (
     <div>
-      <Header />
-      <SideNav />
+      <Header toggleSideNav = {toggleSideNav} />
+      <SideNav isSideNavVisible={isSideNavVisible} toggleSideNav={toggleSideNav} />
 
       {user ? (
         <AddVibes user={user} onCancel={handleCancel} />

@@ -9,17 +9,17 @@ import logoutImg from "../../assets/images/logout.svg";
 import rewardsImg from "../../assets/images/rewards.svg";
 import vibeHistoryImg from "../../assets/images/moodhistory.svg";
 
-const SideNav = ({ isActive, toggleSidebar, downloadChart }) => {
+const SideNav = ({  isSideNavVisible, toggleSideNav ,downloadChart }) => {
   const [isSidebarActive, setIsSidebarActive] = useState(false);
-  const location = useLocation(); // Get the current location
+  const location = useLocation(); 
 
-  const handleSidebarToggle = () => {
-    setIsSidebarActive(!isSidebarActive);
-  };
+  // const handleSidebarToggle = () => {
+  //   setIsSidebarActive(!isSidebarActive);
+  // };
 
   return (
     <div className="nav-container">
-      <div className={`side-nav ${isSidebarActive ? "active" : ""}`}>
+      <div className={`side-nav ${isSideNavVisible ? "active" : ""}`}>
         {/* Navigation Items */}
         <Link to="/" className={`side-nav__link ${location.pathname === "/" ? "active" : ""}`}>
           <div className="nav-item">

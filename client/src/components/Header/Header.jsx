@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Header.scss";
 import menuIcon from "../../assets/images/menu.svg";
 
-const Logo = () => {
+const Header = ({ toggleSideNav }) => {
   const [isHovered, setIsHovered] = useState(false); // State to track hover
 
   const handleMouseEnter = () => {
@@ -22,6 +22,7 @@ const Logo = () => {
           className="header__icon"
           onMouseEnter={handleMouseEnter} 
           onMouseLeave={handleMouseLeave} 
+          onClick={toggleSideNav}
         >
           <img src={menuIcon} alt="menu" className="menuImg" />
          
@@ -32,4 +33,4 @@ const Logo = () => {
   );
 };
 
-export default Logo;
+export default Header;
