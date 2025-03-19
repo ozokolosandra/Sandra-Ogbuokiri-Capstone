@@ -7,6 +7,8 @@ import SideNav from "../../components/SideNav/SideNav";
 import "./HomePage.scss";
 
 function HomePage() {
+  console.log("Rendering HomePage...");
+
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isSideNavVisible, setIsSideNavVisible] = useState(false);

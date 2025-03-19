@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import emailValidator from "email-validator";
-import "./Login.scss";
+import "./Login.scss"; // Assuming you still want custom styles
 
 function LoginPage({ setIsAuthenticated }) {
   const navigate = useNavigate();
@@ -24,7 +24,10 @@ function LoginPage({ setIsAuthenticated }) {
 
     try {
       const loginData = { email, password };
-      const response = await axios.post("http://localhost:8080/auth/login", loginData);
+      const response = await axios.post(
+        "http://localhost:8080/auth/login",
+        loginData
+      );
 
       // Store data in localStorage
       localStorage.setItem("user_id", response.data.user_id);
@@ -33,50 +36,78 @@ function LoginPage({ setIsAuthenticated }) {
 
       console.log(`User is ${response.data.user_id}`);
       console.log(`Username is ${response.data.user_name}`);
+      console.log(setIsAuthenticated); // Check if it is a function
 
       // Update authentication state and navigate to homepage
       setIsAuthenticated(true);
-      navigate("/");
+      navigate("/", { replace: true }); // Ensure navigation
+      console.log("Navigating to HomePage...");
+
+      console.log(localStorage.getItem("token"));
     } catch (err) {
+      console.error(err);
+
       setError("Invalid email or password. Please try again.");
     }
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
+    <div className="container mt-5">
+      <h2 className="mb-4">Login</h2>
+
+      {error && <p className="text-danger">{error}</p>}
+
       <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            if (error) setError("");
-          }}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-            if (error) setError("");
-          }}
-          required
-        />
-        <button type="submit">Login</button>
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            className="form-control"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (error) setError(""); // Clear error on user input
+            }}
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            className="form-control"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (error) setError(""); // Clear error on user input
+            }}
+            required
+          />
+        </div>
+
+        <button type="submit" className="btn btn-primary">
+          Login
+        </button>
       </form>
 
-      {error && (
-        <div className="error-message">
-          <p>{error}</p>
-          <button className="register-link" onClick={() => navigate("/register")}>
-            Don't have an account? Register here
+      <div className="mt-3">
+        <p>
+          Don't have an account?{" "}
+          <button
+            className="btn btn-link"
+            onClick={() => navigate("/register")}
+          >
+            Register here
           </button>
-        </div>
-      )}
+        </p>
+      </div>
     </div>
   );
 }
