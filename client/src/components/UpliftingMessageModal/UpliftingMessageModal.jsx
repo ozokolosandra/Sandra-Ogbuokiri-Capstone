@@ -1,50 +1,58 @@
 import React from "react";
-import ReactModal from "react-modal";
 import PropTypes from "prop-types";
-import closeIcon from "../../assets/images/close-24px.svg";
 import "./UpliftingMessageModal.scss";
 
-ReactModal.setAppElement("#root");
-
 function UpliftingMessageModal({ isOpen, onClose, upliftingMessage }) {
-    return (
-        <ReactModal
-            isOpen={isOpen}
-            onRequestClose={onClose}
-            className="modal"
-            overlayClassName="modal-overlay"
-        >
-            <div className="modal__header">
-                <img
-                    src={closeIcon}
-                    alt="close-icon"
-                    className="modal__close-button"
-                    aria-label="Close"
+  return (
+    <>
+      {isOpen && (
+        <>
+          {/* Modal Markup */}
+          <div
+            className="modal fade show d-block"
+            tabIndex="-1"
+            role="dialog"
+            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+          >
+            <div className="modal-dialog modal-dialog-centered" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Uplifting Message</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
                     onClick={onClose}
-                />
-            </div>
-            <div className="modal__body">
-                <div className="modal__content">
-                    <h1 className="uplifting-message__header">Uplifting Message:</h1>
-                    <p className="uplifting-message__text">{upliftingMessage}</p>
+                    aria-label="Close"
+                  ></button>
                 </div>
-                <div className="modal__buttons">
-                    <button
-                        onClick={onClose} // Call onClose when the button is clicked
-                        className="modal__button modal__button--confirm"
-                    >
-                        Ok
-                    </button>
+                <div className="modal-body">
+                  <p>{upliftingMessage}</p>
                 </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={onClose}
+                  >
+                    Ok
+                  </button>
+                </div>
+              </div>
             </div>
-        </ReactModal>
-    );
+          </div>
+
+          {/* Modal Backdrop */}
+          <div className="modal-backdrop fade show"></div>
+        </>
+      )}
+    </>
+  );
 }
 
 UpliftingMessageModal.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    upliftingMessage: PropTypes.string,
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  upliftingMessage: PropTypes.string,
 };
 
 export default UpliftingMessageModal;
