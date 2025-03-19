@@ -28,3 +28,15 @@
             $background-colour3 60%,
             $gradient-color2 100%);
 }
+
+@mixin pageheader {
+    font-family: "Poppins";
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 18px;
+
+    @include tablet {
+        font-size: 40px;
+        line-height: 32px;
+    }
+}

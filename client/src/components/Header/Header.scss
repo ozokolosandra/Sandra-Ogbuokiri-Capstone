@@ -15,13 +15,14 @@
     &__add,
     &__heart,
     &__vibes {
-        font-size: 36px;
+        //font-size: 36px;
         background: linear-gradient(74deg, #edeaef, #d5c3db);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
         display: inline-block;
         cursor: pointer;
+        @include pageheader;
     }
 
     // Add a pointer to "Vibes Radar"
