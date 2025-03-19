@@ -7,7 +7,6 @@ function UpliftingMessageModal({ isOpen, onClose, upliftingMessage }) {
     <>
       {isOpen && (
         <>
-          {/* Modal Markup */}
           <div
             className="modal fade show d-block"
             tabIndex="-1"
@@ -31,8 +30,9 @@ function UpliftingMessageModal({ isOpen, onClose, upliftingMessage }) {
                 <div className="modal-footer">
                   <button
                     type="button"
-                    className="btn btn-primary"
+                    className="btn"
                     onClick={onClose}
+                    style={{ backgroundColor: "rgb(116, 22, 116)", color: "white" }}
                   >
                     Ok
                   </button>
@@ -41,7 +41,6 @@ function UpliftingMessageModal({ isOpen, onClose, upliftingMessage }) {
             </div>
           </div>
 
-          {/* Modal Backdrop */}
           <div className="modal-backdrop fade show"></div>
         </>
       )}

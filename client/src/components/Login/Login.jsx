@@ -1,19 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import emailValidator from "email-validator"; // Import the email-validator
+import emailValidator from "email-validator";
 import "./Login.scss";
 
-function LoginPage() {
+function LoginPage({ setIsAuthenticated }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState(""); // Email state
   const [password, setPassword] = useState(""); // Password state
   const [error, setError] = useState(""); // Error state
 
-  // Function to validate if the input is a valid email
-  const isValidEmail = (str) => {
-    return emailValidator.validate(str); // Returns true if valid email
-  };
+  // Validate email using email-validator
+  const isValidEmail = (str) => emailValidator.validate(str);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,23 +23,20 @@ function LoginPage() {
     }
 
     try {
-      
-      const loginData = {
-        email,
-        password,
-      };
-
+      const loginData = { email, password };
       const response = await axios.post("http://localhost:8080/auth/login", loginData);
 
+      // Store data in localStorage
       localStorage.setItem("user_id", response.data.user_id);
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user_name", response.data.user_name)
-      console.log(`user  is ${response.data.user_id}`)
-      console.log(`username is ${response.data.user_name}`)
+      localStorage.setItem("user_name", response.data.user_name);
 
-      
+      console.log(`User is ${response.data.user_id}`);
+      console.log(`Username is ${response.data.user_name}`);
+
+      // Update authentication state and navigate to homepage
+      setIsAuthenticated(true);
       navigate("/");
-
     } catch (err) {
       setError("Invalid email or password. Please try again.");
     }
@@ -52,17 +47,23 @@ function LoginPage() {
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <input
-          type="email" // Only email type now
+          type="email"
           placeholder="Email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (error) setError("");
+          }}
           required
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            if (error) setError("");
+          }}
           required
         />
         <button type="submit">Login</button>
