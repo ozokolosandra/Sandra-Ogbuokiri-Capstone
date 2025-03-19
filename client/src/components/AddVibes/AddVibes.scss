@@ -29,8 +29,9 @@
 
     &__info {
         display: flex;
-        flex-direction: column;
-        width: 50%;
+        flex-direction: row;
+        width: 64%;
+
     }
 
     &__error {
@@ -90,6 +91,7 @@ textarea {
     padding: 10px;
     border-radius: 8px;
 }
+
 
 
 
