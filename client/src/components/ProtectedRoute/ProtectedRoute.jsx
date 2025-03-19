@@ -5,7 +5,7 @@ const ProtectedRoute = ({ isAuthenticated }) => {
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
-  return <Outlet />; // Render the nested routes
+  return <Outlet />; 
 };
 
 export default ProtectedRoute;

@@ -32,7 +32,7 @@ const Chart = ({ chartType, chartData, numberToMood },ref) => {
       y: {
         title: { display: true, text: "Mood" },
         min: 0,
-        max: 9,
+        max: 20,
         ticks: {
           callback: (value) => numberToMood[value] || value,
         },
@@ -83,7 +83,7 @@ const Chart = ({ chartType, chartData, numberToMood },ref) => {
       y: {
         title: { display: true, text: "Frequency of Vibes" },
         min: 0,
-        max: 9,
+        max: 20,
         ticks: {
           callback: (value) => numberToMood[value] || value,
         },
