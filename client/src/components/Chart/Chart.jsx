@@ -1,7 +1,17 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { Bar, Line } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend } from "chart.js";
-import "./Chart.scss"; 
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import "./Chart.scss";
 
 // Register Chart.js components
 ChartJS.register(
@@ -15,10 +25,10 @@ ChartJS.register(
   Legend
 );
 
-const Chart = ({ chartType, chartData, numberToMood },ref) => {
+const Chart = forwardRef((props, ref) => {
+  const { chartType, chartData, numberToMood } = props;
 
   
-  // Ensure chartData.datasets is defined
   if (!chartData.datasets || chartData.datasets.length === 0) {
     return <p>No data available for the chart.</p>;
   }
@@ -123,12 +133,12 @@ const Chart = ({ chartType, chartData, numberToMood },ref) => {
     <div className="report__chart">
       {/* Chart Rendering */}
       {chartType === "bar" ? (
-        <Bar ref ={ref} data={chartData} options={barChartOptions} />
+        <Bar ref={ref} data={chartData} options={barChartOptions} />
       ) : (
-        <Line ref = {ref}data={chartData} options={lineChartOptions} />
+        <Line ref={ref} data={chartData} options={lineChartOptions} />
       )}
     </div>
   );
-};
+});
 
 export default Chart;

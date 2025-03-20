@@ -2,14 +2,14 @@
 
 .report {
     padding-left: 0.5rem;
-    margin-top: 7rem;
+    margin-top: 1rem;
 
     &__container {
         width: 100%;
-
+        transition: 0.5s ease-in-out;
         margin-top: 1rem;
 
-        & h3 {
+        & h4 {
             margin: 2rem 0.5rem;
         }
     }
@@ -59,10 +59,7 @@
         margin-top: 20px;
     }
 
-
     &__chart {
-
-
         canvas {
             border: 1px solid #ddd;
             border-radius: 20px;
@@ -77,19 +74,16 @@
             gap: 10px;
             margin-bottom: 20px;
 
-
             .legend-item {
                 display: flex;
                 align-items: center;
                 gap: 5px;
-
 
                 .legend-color-box {
                     width: 12px;
                     height: 12px;
                     border-radius: 3px;
                 }
-
 
                 .legend-text {
                     font-size: 14px;
@@ -124,7 +118,6 @@
     }
 }
 
-
 .download-button {
     background: none;
     border: none;
@@ -134,7 +127,6 @@
     right: 0.075rem;
     padding: 0;
     margin: 0;
-
 
     .download-icon {
         width: 2.5rem;

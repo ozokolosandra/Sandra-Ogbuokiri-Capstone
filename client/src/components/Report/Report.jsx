@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, forwardRef } from "react";
 import axios from "axios";
 import "./Report.scss";
 import DatePicker from "react-datepicker";
@@ -6,16 +6,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import Chart from "../Chart/Chart";
 import downloadIcon from "../../assets/images/download.svg";
 
-const Report = () => {
+const Report = forwardRef((props, ref) => {
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
   const [durationType, setDurationType] = useState("weekly");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [chartType, setChartType] = useState("bar");
-
-  // Ref to access the chart instance
-  const chartRef = useRef(null);
 
   // Retrieve user details from localStorage
   const user_id = localStorage.getItem("user_id");
@@ -24,35 +21,17 @@ const Report = () => {
   // Mood colors mapping
   const moodColors = {
     "Very Sad": "#FF6384",
-    "Sad": "#36A2EB",
-    "Neutral": "#FFCE56",
-    "Happy": "#4BC0C0",
+    Sad: "#36A2EB",
+    Neutral: "#FFCE56",
+    Happy: "#4BC0C0",
     "Very Happy": "#9966FF",
-    "Confident": "#FF9F40",
-    "Triumphant": "#C9CBCF",
-    "Anxious": "#FF6F61",
-    "Stressed": "#6B5B95",
+    Confident: "#FF9F40",
+    Triumphant: "#C9CBCF",
+    Anxious: "#FF6F61",
+    Stressed: "#6B5B95",
   };
 
-  // Function to download the chart as an image
-  const downloadChart = () => {
-    const chart = chartRef.current;
-
-    if (chart) {
-      // Convert the chart to a base64 image
-      const image = chart.toBase64Image("image/png", 1.0);
-
-      // Create a temporary <a> element to trigger the download
-      const link = document.createElement("a");
-      link.href = image;
-      link.download = "chart.png"; // Set the filename for the downloaded image
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  };
-
-  // Fetch reports logic
+ 
   const fetchReports = async (start, end) => {
     console.log("Fetching reports for:", { start, end, user_id });
 
@@ -117,8 +96,8 @@ const Report = () => {
 
   const handleApplyCustomRange = () => {
     if (startDate && endDate) {
-      const formattedStartDate = startDate.toISOString().split('T')[0];
-      const formattedEndDate = endDate.toISOString().split('T')[0];
+      const formattedStartDate = startDate.toISOString().split("T")[0];
+      const formattedEndDate = endDate.toISOString().split("T")[0];
       fetchReports(formattedStartDate, formattedEndDate);
     }
   };
@@ -130,27 +109,27 @@ const Report = () => {
       const end = new Date();
       const start = new Date();
       start.setDate(end.getDate() - 7);
-      fetchReports(start.toISOString().split('T')[0], end.toISOString().split('T')[0]);
+      fetchReports(start.toISOString().split("T")[0], end.toISOString().split("T")[0]);
     } else if (durationType === "monthly") {
       const end = new Date();
       const start = new Date();
       start.setMonth(end.getMonth() - 1);
-      fetchReports(start.toISOString().split('T')[0], end.toISOString().split('T')[0]);
+      fetchReports(start.toISOString().split("T")[0], end.toISOString().split("T")[0]);
     } else if (durationType === "custom" && startDate && endDate) {
-      const formattedStartDate = startDate.toISOString().split('T')[0];
-      const formattedEndDate = endDate.toISOString().split('T')[0];
+      const formattedStartDate = startDate.toISOString().split("T")[0];
+      const formattedEndDate = endDate.toISOString().split("T")[0];
       fetchReports(formattedStartDate, formattedEndDate);
     }
   }, [durationType, startDate, endDate]);
 
   return (
     <div className="report__container">
-      <h3>Vibes Chart for {user_name}</h3>
+      <h4>Lets visualize your vibes!</h4>
 
       {/* Download Button */}
-      {/* <button onClick={downloadChart} className="download-button">
+      <button onClick={props.downloadChart} className="download-button">
         <img src={downloadIcon} alt="Download" className="download-icon" />
-      </button> */}
+      </button>
 
       <div className="report__durationPicker">
         <label>Select Chart Type:</label>
@@ -193,16 +172,20 @@ const Report = () => {
           </button>
         </div>
       )}
-
+        console.log(`chart length is ${chartData.length}`)
       <div className="report__chartContainer">
         {chartData.labels.length > 0 ? (
-          <Chart ref={chartRef} chartType={chartType} chartData={chartData} numberToMood={moodColors} />
+          
+          
+          <Chart ref={ref} chartType={chartType} chartData={chartData} numberToMood={moodColors} />
         ) : (
           <p className="report__errorMessage">{errorMessage || "No data available."}</p>
-        )}
+        
+        )
+        }
       </div>
     </div>
   );
-};
+});
 
 export default Report;

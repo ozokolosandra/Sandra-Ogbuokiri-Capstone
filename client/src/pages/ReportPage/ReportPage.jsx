@@ -5,8 +5,8 @@ import SideNav from "../../components/SideNav/SideNav";
 import "./ReportPage.scss";
 
 function ReportPage() {
-  const [isSideNavVisible, setIsSideNavVisible] = useState(false); // State to manage SideNav visibility
-  const chartRef = useRef(null); // Ref for the chart
+  const [isSideNavVisible, setIsSideNavVisible] = useState(false); 
+  const chartRef = useRef(null); 
 
   // Toggle SideNav visibility
   const toggleSideNav = () => {
@@ -24,7 +24,7 @@ function ReportPage() {
       // Create a temporary <a> element to trigger the download
       const link = document.createElement("a");
       link.href = image;
-      link.download = "chart.png"; // Set the filename for the downloaded image
+      link.download = "chart.png"; 
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -33,21 +33,21 @@ function ReportPage() {
 
   return (
     <div>
-      {/* Pass toggleSideNav to Header */}
+      
       <Header toggleSideNav={toggleSideNav} />
 
-      {/* Pass isSideNavVisible and toggleSideNav to SideNav */}
-      <SideNav
+            <SideNav
         isSideNavVisible={isSideNavVisible}
         toggleSideNav={toggleSideNav}
-        downloadChart={downloadChart} // Pass the download function to SideNav
+        downloadChart={downloadChart} 
       />
 
-      {/* Main content area */}
+      
       <div className={`report ${isSideNavVisible ? "active" : ""}`}>
         <Report
           className="report-container"
-          chartRef={chartRef} // Pass the ref to Report
+          ref={chartRef} 
+          downloadChart={downloadChart} 
         />
       </div>
     </div>
