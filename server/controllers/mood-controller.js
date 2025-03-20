@@ -8,6 +8,18 @@ const HF_API_URL =
   "https://api-inference.huggingface.co/models/distilbert/distilbert-base-uncased-finetuned-sst-2-english";
 const HF_API_TOKEN = process.env.HF_API_TOKEN;
 
+// Keyword mapping for mood categories
+const moodKeywords = {
+  Confident: ["confident", "valuable", "proud", "capable"],
+  Excited: ["excited", "thrilled", "pumped", "eager"],
+  Remorseful: ["remorseful", "regretful", "sorry", "guilty"],
+  Lonely: ["lonely", "isolated", "alone", "abandoned"],
+  Stressed: ["stressed", "overwhelmed", "anxious", "alarmed"],
+  Hopeful: ["hopeful", "optimistic", "positive", "encouraged"],
+  Neutral: ["neutral", "indifferent", "okay", "fine"],
+  // Add more mood categories and keywords as needed
+};
+
 /**
  * Calls Hugging Face API for sentiment analysis.
  * Retries up to 3 times if the API is down (503 error).
@@ -36,19 +48,39 @@ async function analyzeSentimentHF(text, retries = 3) {
     }
 
     const result = await response.json();
-    return result; 
+    return result;
   } catch (error) {
     console.error("Error fetching from Hugging Face:", error);
-    return [{ label: "Neutral", score: 0.5 }]; 
+    return [{ label: "Neutral", score: 0.5 }]; // Fallback response
   }
 }
 
 /**
- * Categorizes the sentiment based on Hugging Face response.
+ * Infers mood from text using keyword matching.
  */
-const categorizeSentiment = (hfResult) => {
+const inferMoodFromKeywords = (text) => {
+  const lowerCaseText = text.toLowerCase();
+  for (const [mood, keywords] of Object.entries(moodKeywords)) {
+    if (keywords.some((keyword) => lowerCaseText.includes(keyword))) {
+      return mood; // Return the first matching mood
+    }
+  }
+  return null; // No keyword match found
+};
+
+/**
+ * Categorizes the sentiment based on Hugging Face response and keyword matching.
+ */
+const categorizeSentiment = (hfResult, text) => {
+  // First, try keyword matching
+  const inferredMood = inferMoodFromKeywords(text);
+  if (inferredMood) {
+    return inferredMood;
+  }
+
+  // Fallback to Hugging Face sentiment analysis
   if (!Array.isArray(hfResult) || hfResult.length === 0) {
-    return "Neutral"; 
+    return "Neutral"; // Fallback if no result
   }
 
   const sentimentData = hfResult[0]; // Extract first array element
@@ -61,8 +93,73 @@ const categorizeSentiment = (hfResult) => {
   if (positive.score >= 0.75) return "Happy";
   if (negative.score >= 0.9) return "Very Sad";
   if (negative.score >= 0.75) return "Sad";
-  
+
   return "Neutral";
+};
+
+/**
+ * Default uplifting messages for each mood category.
+ */
+const defaultMessages = {
+  "Very Happy": "You're on top of the world! Keep shining!",
+  "Happy": "Keep smiling and spreading joy!",
+  "Neutral": "Stay positive and take things one step at a time.",
+  "Sad": "It's okay to feel down sometimes. Tomorrow is a new day.",
+  "Very Sad": "Things will get better. You're stronger than you think.",
+  "Confident": "You are unstoppable! Keep believing in yourself.",
+  "Excited": "This is just the beginning of something amazing!",
+  "Remorseful": "It’s okay to make mistakes. Learn and grow from them.",
+  "Lonely": "You are never truly alone. Reach out to someone who cares.",
+  "Stressed": "Take a deep breath. You’ve got this!",
+  "Hopeful": "Great things are coming your way. Stay positive!",
+  // Add more default messages as needed
+};
+
+/**
+ * Creates a new mood entry in the database.
+ */
+const createMood = async (req, res) => {
+  try {
+    const { mood_text, user_id } = req.body;
+
+    if (!mood_text || !user_id) {
+      return res.status(400).json({ error: "mood_text and user_id are required!" });
+    }
+
+    // Analyze sentiment using Hugging Face API
+    const hfResult = await analyzeSentimentHF(mood_text);
+    console.log("Hugging Face API Response:", hfResult);
+
+    // Categorize mood using combined sentiment analysis and keyword matching
+    let mood_category = categorizeSentiment(hfResult, mood_text);
+
+    // Fetch uplifting message from the database or use a default message
+    const upliftingMessageRecord = await knex("uplifting_messages")
+      .whereRaw("mood_category = ?", [mood_category])
+      .orderByRaw("RAND()")
+      .first();
+
+    const uplifting_message =
+      upliftingMessageRecord?.message?.trim() || defaultMessages[mood_category] || "Stay positive!";
+
+    console.log(`Mood Category: ${mood_category}`);
+    console.log("Uplifting Message Retrieved:", uplifting_message);
+    console.log("Hugging Face API Response:", hfResult);
+
+    // Insert into database
+    const [newMoodId] = await knex("mood").insert({
+      mood_text,
+      mood_category,
+      user_id,
+    });
+
+    const newMood = await knex("mood").where("id", newMoodId).first();
+
+    res.status(201).json({ ...newMood, uplifting_message });
+  } catch (error) {
+    console.error("Error creating mood:", error);
+    res.status(500).json({ error: `An error occurred: ${error.message}` });
+  }
 };
 
 /**
@@ -91,72 +188,6 @@ const getAllMoods = async (_req, res) => {
   }
 };
 
-
-const defaultMessages = {
-  "Very Happy": "You're on top of the world! Keep shining!",
-  "Happy": "Keep smiling and spreading joy!",
-  "Neutral": "Stay positive and take things one step at a time.",
-  "Sad": "It's okay to feel down sometimes. Tomorrow is a new day.",
-  "Very sad": "Things will get better. You're stronger than you think.",
-};
-
-const createMood = async (req, res) => {
-  try {
-      const { mood_text, user_id } = req.body;
-
-      if (!mood_text || !user_id) {
-          return res.status(400).json({ error: "mood_text and user_id are required!" });
-      }
-
-      
-      const hfResult = await analyzeSentimentHF(mood_text);
-      console.log("Hugging Face API Response:", hfResult);
-
-      // Categorize mood
-      let mood_category = categorizeSentiment(hfResult);
-      //mood_category = mood_category.toLowerCase(); 
-
-      
-      const categoryExists = await knex("uplifting_messages")
-          .whereRaw("mood_category = ?", [mood_category])
-          .first();
-
-      // if (!categoryExists) {
-      //     console.warn(`Mood category '${mood_category}' does not exist in uplifting_messages. Using fallback.`);
-      //     mood_category = "Neutral"; 
-      // }
-
-
-      const upliftingMessageRecord = await knex("uplifting_messages")
-      .whereRaw("mood_category = ?", [mood_category])
-      .orderByRaw("RAND()")
-      .first();
-      
-
-      const uplifting_message =
-          upliftingMessageRecord && upliftingMessageRecord.message && upliftingMessageRecord.message.trim() !== ""
-              ? upliftingMessageRecord.message
-              : defaultMessages[mood_category] || "Stay positive!"; 
-
-      console.log(`Mood Category: ${mood_category}`);
-      console.log("Uplifting Message Retrieved:", uplifting_message);
-      console.log("Hugging Face API Response:", hfResult);
-
-      // Insert into database
-      const [newMoodId] = await knex("mood").insert({
-          mood_text,
-          mood_category,
-          user_id,
-      });
-
-      const newMood = await knex("mood").where("id", newMoodId).first();
-
-      res.status(201).json({ ...newMood, uplifting_message });
-  } catch (error) {
-      console.error("Error creating mood:", error);
-      res.status(500).json({ error: `An error occurred: ${error.message}` });
-  }
-};
 /**
  * Gets a single mood entry by ID.
  */
@@ -174,4 +205,5 @@ const getMoodById = async (req, res) => {
   }
 };
 
+// Export functions
 export { getAllMoods, createMood, getMoodById };
