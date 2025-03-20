@@ -9,6 +9,8 @@ moodRouter.route("/")
 .post(moodController.createMood);
 
 moodRouter.route("/:id")
-.get(moodController.getMoodById)
+.get(moodController.getMoodById);
+
+
 
 export default moodRouter;

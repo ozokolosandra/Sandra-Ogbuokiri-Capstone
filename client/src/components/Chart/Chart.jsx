@@ -10,6 +10,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  TimeScale,
 } from "chart.js";
 import "./Chart.scss";
 
@@ -22,13 +23,14 @@ ChartJS.register(
   PointElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  TimeScale // Add TimeScale for line chart
 );
 
 const Chart = forwardRef((props, ref) => {
   const { chartType, chartData, numberToMood } = props;
 
-  
+  // Ensure chartData.datasets is defined
   if (!chartData.datasets || chartData.datasets.length === 0) {
     return <p>No data available for the chart.</p>;
   }
@@ -38,13 +40,22 @@ const Chart = forwardRef((props, ref) => {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      x: { title: { display: true, text: "Time Period" } },
+      x: {
+        type: "time", // Use time scale for x-axis
+        time: {
+          unit: "day", // Group by day
+          tooltipFormat: "MMM dd", // Format for tooltips (e.g., "Oct 01")
+          displayFormats: {
+            day: "MMM dd", // Format for axis labels (e.g., "Oct 01")
+          },
+        },
+        title: { display: true, text: "Date" },
+      },
       y: {
-        title: { display: true, text: "Mood" },
+        title: { display: true, text: "Mood Count" },
         min: 0,
-        max: 20,
         ticks: {
-          callback: (value) => numberToMood[value] || value,
+          stepSize: 1, // Show whole numbers on y-axis
         },
       },
     },
@@ -52,32 +63,28 @@ const Chart = forwardRef((props, ref) => {
       legend: {
         display: true,
         position: "top",
-        labels: {
-          family: "Outfit",
-          size: 14,
-          generateLabels: (chart) => {
-            const datasets = chart.data.datasets;
-            return datasets.map((dataset) => ({
-              text: dataset.label || "",
-              fillStyle: dataset.backgroundColor,
-              strokeStyle: dataset.borderColor,
-              lineWidth: 0,
-              hidden: !chart.isDatasetVisible(dataset.index),
-              index: dataset.index,
-            }));
-          },
-        },
       },
       tooltip: {
         callbacks: {
           label: (context) => {
             const label = context.dataset.label || "";
             const value = context.raw;
-            return `${label}: ${numberToMood[value] || value}`;
+            return `${label}: ${value}`; // Show mood count in tooltip
           },
         },
       },
     },
+  };
+
+  // Update the dataset in chartData to use a black line
+  const updatedChartData = {
+    ...chartData,
+    datasets: chartData.datasets.map((dataset) => ({
+      ...dataset,
+      borderColor: "#000000", // Set the line color to black
+      backgroundColor: dataset.borderColor, // Use mood color for fill (optional)
+      fill: false, // Do not fill under the line
+    })),
   };
 
   // Bar chart specific styling
@@ -135,7 +142,7 @@ const Chart = forwardRef((props, ref) => {
       {chartType === "bar" ? (
         <Bar ref={ref} data={chartData} options={barChartOptions} />
       ) : (
-        <Line ref={ref} data={chartData} options={lineChartOptions} />
+        <Line ref={ref} data={updatedChartData} options={lineChartOptions} />
       )}
     </div>
   );

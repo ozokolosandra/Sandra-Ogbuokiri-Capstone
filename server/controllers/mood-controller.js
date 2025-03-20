@@ -204,6 +204,7 @@ const getMoodById = async (req, res) => {
     res.status(500).json({ error: `An error occurred: ${error.message}` });
   }
 };
+// Assuming this is your route to get mood trends
 
-// Export functions
-export { getAllMoods, createMood, getMoodById };
+
+export { getAllMoods, createMood, getMoodById  };

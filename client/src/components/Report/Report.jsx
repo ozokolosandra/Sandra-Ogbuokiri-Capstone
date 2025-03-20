@@ -31,7 +31,66 @@ const Report = forwardRef((props, ref) => {
     Stressed: "#6B5B95",
   };
 
- 
+  // Function to transform data for bar chart
+  const transformDataForBarChart = (mood_trends) => {
+    const moodData = Object.entries(mood_trends).map(([mood_category, count]) => ({
+      mood_category,
+      count,
+    }));
+
+    const labels = moodData.map((mood) => mood.mood_category);
+    const counts = moodData.map((mood) => mood.count);
+    const backgroundColors = labels.map((mood) => moodColors[mood] || "#CCCCCC");
+
+    return {
+      labels,
+      datasets: [
+        {
+          label: "Mood Frequency",
+          data: counts,
+          backgroundColor: backgroundColors,
+          borderColor: "#FFFFFF",
+          borderWidth: 1,
+        },
+      ],
+    };
+  };
+
+  // Function to transform data for line chart
+  const transformDataForLineChart = (mood_trends) => {
+    // Group moods by date
+    const moodByDate = {};
+
+    Object.entries(mood_trends).forEach(([mood_category, entries]) => {
+      entries.forEach((entry) => {
+        const date = new Date(entry.timestamp).toLocaleDateString(); // Group by date
+        if (!moodByDate[date]) {
+          moodByDate[date] = [];
+        }
+        moodByDate[date].push({ mood: mood_category, timestamp: entry.timestamp });
+      });
+    });
+
+    // Create labels (dates) and data points
+    const labels = Object.keys(moodByDate).sort(); // Sort dates
+    const datasets = Object.keys(moodColors).map((mood) => ({
+      label: mood,
+      data: labels.map((date) => {
+        const moodsOnDate = moodByDate[date];
+        const count = moodsOnDate.filter((entry) => entry.mood === mood).length;
+        return count;
+      }),
+      borderColor: moodColors[mood],
+      fill: false,
+    }));
+
+    return {
+      labels,
+      datasets,
+    };
+  };
+
+  // Fetch reports logic
   const fetchReports = async (start, end) => {
     console.log("Fetching reports for:", { start, end, user_id });
 
@@ -55,33 +114,18 @@ const Report = forwardRef((props, ref) => {
         throw new Error("Invalid mood_trends data");
       }
 
-      // Transform mood_trends into an array of { mood_category, count }
-      const moodData = Object.entries(mood_trends).map(([mood_category, count]) => ({
-        mood_category,
-        count,
-      }));
+      // Transform data based on chart type
+      let transformedData;
+      if (chartType === "bar") {
+        // Bar chart data: frequency of moods
+        transformedData = transformDataForBarChart(mood_trends);
+      } else if (chartType === "line") {
+        // Line chart data: moods over time
+        transformedData = transformDataForLineChart(mood_trends);
+      }
 
-      console.log("Mood Data:", moodData);
-
-      if (moodData.length > 0) {
-        const labels = moodData.map((mood) => mood.mood_category);
-        const counts = moodData.map((mood) => mood.count);
-        console.log("Mood Categories:", moodData.map((mood) => mood.mood_category));
-
-        const backgroundColors = labels.map((mood) => moodColors[mood] || "#CCCCCC");
-
-        setChartData({
-          labels,
-          datasets: [
-            {
-              label: "Mood Over Time",
-              data: counts,
-              backgroundColor: backgroundColors,
-              borderColor: "#FFFFFF",
-              borderWidth: 1,
-            },
-          ],
-        });
+      if (transformedData.labels.length > 0) {
+        setChartData(transformedData);
         setErrorMessage(""); // Clear error message
       } else {
         setErrorMessage("No mood data available for the selected duration.");
@@ -103,7 +147,7 @@ const Report = forwardRef((props, ref) => {
   };
 
   useEffect(() => {
-    console.log("useEffect triggered for:", { durationType, startDate, endDate });
+    console.log("useEffect triggered for:", { durationType, startDate, endDate, chartType });
 
     if (durationType === "weekly") {
       const end = new Date();
@@ -120,7 +164,7 @@ const Report = forwardRef((props, ref) => {
       const formattedEndDate = endDate.toISOString().split("T")[0];
       fetchReports(formattedStartDate, formattedEndDate);
     }
-  }, [durationType, startDate, endDate]);
+  }, [durationType, startDate, endDate, chartType]); // Add chartType to dependencies
 
   return (
     <div className="report__container">
@@ -172,17 +216,13 @@ const Report = forwardRef((props, ref) => {
           </button>
         </div>
       )}
-        console.log(`chart length is ${chartData.length}`)
+
       <div className="report__chartContainer">
         {chartData.labels.length > 0 ? (
-          
-          
           <Chart ref={ref} chartType={chartType} chartData={chartData} numberToMood={moodColors} />
         ) : (
           <p className="report__errorMessage">{errorMessage || "No data available."}</p>
-        
-        )
-        }
+        )}
       </div>
     </div>
   );
