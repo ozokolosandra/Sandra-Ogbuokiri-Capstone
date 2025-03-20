@@ -92,7 +92,7 @@ function LoginPage({ setIsAuthenticated }) {
           />
         </div>
 
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="login-btn">
           Login
         </button>
       </form>
@@ -101,7 +101,7 @@ function LoginPage({ setIsAuthenticated }) {
         <p>
           Don't have an account?{" "}
           <button
-            className="btn btn-link"
+            className="btn login-link"
             onClick={() => navigate("/register")}
           >
             Register here

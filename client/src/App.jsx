@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage/HomePage";
 import ReportPage from "./pages/ReportPage/ReportPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 
 function App() {
   // Manage the user's authentication state.
@@ -28,6 +29,7 @@ function App() {
         >
           <Route path="logout" element={<LogoutPage />} />
           <Route path="report" element={<ReportPage />} />
+          <Route path="profile" element ={<ProfilePage/>} />
         </Route>
 
         <Route

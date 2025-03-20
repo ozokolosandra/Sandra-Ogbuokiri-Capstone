@@ -36,7 +36,7 @@ Who will use your app? How will they use it? Add any special considerations that
 List the functionality that your app will include. These can be written as user stories or descriptions with related details. Do not describe _how_ these features are implemented, only _what_ needs to be implemented.
 
 - As a user, I want to be able to create an account so that I can access all the cool fetaures of VibesRadar.
-- As a user, I wnat to be able to log in using my already created credentials, so that I can access the application.
+- As a user, I want to be able to log in using my already created credentials, so that I can access the application.
 - As a user, I want to be able to log my daily mood
 - As a user, I want to receive a tip when I submit my mood daily
 - As a user, I wnat to be able to go back and edit my entry.

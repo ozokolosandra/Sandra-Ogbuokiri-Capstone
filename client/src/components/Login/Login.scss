@@ -42,6 +42,28 @@
     &-container button:hover {
         background-color: $button-color2;
     }
+
+    &-btn {
+        border-radius: 20px;
+        border: 5px solid $button-color1;
+        background-color: $button-color1;
+        color: $white;
+        width: 20%;
+
+        &:hover {
+            opacity: 0.5;
+        }
+    }
+
+    &-link {
+        text-decoration: underline;
+        color: $button-color1;
+
+        &:hover {
+            opacity: 0.5;
+        }
+    }
+
 }
 
 .error-message {
@@ -49,11 +71,6 @@
     margin-top: 10px;
 }
 
-.register-link {
-    color: #4caf50;
-    text-decoration: none;
-    cursor: pointer;
-}
 
 .register-link:hover {
     text-decoration: underline;

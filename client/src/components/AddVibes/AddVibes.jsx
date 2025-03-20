@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import errorIcon from "../../assets/images/error.svg";
+import "./AddVibes.scss"
 import UpliftingMessageModal from "../UpliftingMessageModal/UpliftingMessageModal";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -133,15 +134,11 @@ function AddVibes({ user, onCancel }) {
           <div className="d-flex justify-content-between">
             <button
               type="submit"
-              className="btn"
-              style={{
-                backgroundColor: "rgba(79, 35, 165, 0.9803921569)",
-                color: "#fff",
-              }}
-            >
+              className="submit-btn"
+              >
               Submit
             </button>
-            <button type="button" className="btn btn-secondary" onClick={onCancel}>
+            <button type="button" className="btn btn-cancel" onClick={onCancel}>
               Cancel
             </button>
           </div>
