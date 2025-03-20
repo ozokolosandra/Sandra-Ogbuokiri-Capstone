@@ -1,0 +1,39 @@
+@use "../../styles/partials/variables" as *;
+;
+
+.register {
+    &-btn {
+        border-radius: 20px;
+        border: 5px solid $button-color1;
+        background-color: $button-color1;
+        color: $white;
+        width: 20%;
+
+        &:hover {
+            opacity: 0.5;
+            opacity: 0.5;
+            border: 5px solid $button-color1;
+            background-color: $button-color1
+        }
+
+
+    }
+
+    &__links {
+        p {
+            display: flex;
+            gap: 1rem;
+        }
+
+        &-link {
+            text-decoration: underline;
+            color: $button-color1;
+
+            &:hover {
+                opacity: 0.5;
+            }
+        }
+
+
+    }
+}

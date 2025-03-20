@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import "./Register.scss"
 import axios from 'axios';
 
 const Register = () => {
@@ -33,7 +34,7 @@ const Register = () => {
 
   return (
     <div className="container mt-5">
-      <h1 className="mb-4">Register</h1>
+      <h1 className="mb-4">Create Account</h1>
       {error && <p className="text-danger">{error}</p>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
@@ -69,13 +70,15 @@ const Register = () => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary">Register</button>
+        <button type="submit" className="btn register-btn">Register</button>
       </form>
       <div className="mt-3">
+        <div className='register__links'>
         <p>
-          Already have an account? <Link to="/login">Login here</Link>
+          Already have an account? <Link to="/login"> <div className='register__links-link'>Login here</div></Link>
         </p>
       </div>
+    </div>
     </div>
   );
 };
