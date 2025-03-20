@@ -1,5 +1,8 @@
 import React, { forwardRef } from "react";
 import { Bar, Line } from "react-chartjs-2";
+import 'chartjs-adapter-date-fns';
+import { useEffect } from "react";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -29,7 +32,14 @@ ChartJS.register(
 
 const Chart = forwardRef((props, ref) => {
   const { chartType, chartData, numberToMood } = props;
-
+  useEffect(() => {
+    return () => {
+      if (ref.current) {
+        ref.current.chartInstance?.destroy();
+      }
+    };
+  }, [chartData, chartType]);
+  
   // Ensure chartData.datasets is defined
   if (!chartData.datasets || chartData.datasets.length === 0) {
     return <p>No data available for the chart.</p>;
