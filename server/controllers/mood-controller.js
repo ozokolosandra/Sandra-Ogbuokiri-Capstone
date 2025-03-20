@@ -4,8 +4,7 @@ import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
 // Hugging Face API configuration
-const HF_API_URL =
-  "https://api-inference.huggingface.co/models/distilbert/distilbert-base-uncased-finetuned-sst-2-english";
+const HF_API_URL = "https://api-inference.huggingface.co/models/distilbert/distilbert-base-uncased-finetuned-sst-2-english";
 const HF_API_TOKEN = process.env.HF_API_TOKEN;
 
 // Keyword mapping for mood categories
@@ -17,13 +16,11 @@ const moodKeywords = {
   Stressed: ["stressed", "overwhelmed", "anxious", "alarmed"],
   Hopeful: ["hopeful", "optimistic", "positive", "encouraged"],
   Neutral: ["neutral", "indifferent", "okay", "fine"],
-  // Add more mood categories and keywords as needed
 };
 
-/**
- * Calls Hugging Face API for sentiment analysis.
- * Retries up to 3 times if the API is down (503 error).
- */
+console.log(HF_API_TOKEN);
+
+// Analyze sentiment using Hugging Face API
 async function analyzeSentimentHF(text, retries = 3) {
   try {
     const response = await fetch(HF_API_URL, {
@@ -43,7 +40,7 @@ async function analyzeSentimentHF(text, retries = 3) {
       }
 
       const errorDetails = await response.text();
-      console.error("Error response from Hugging Face:", errorDetails);
+      console.error("Error response from Hugging Face!:", errorDetails);
       throw new Error("Failed sentiment analysis request");
     }
 
@@ -51,39 +48,31 @@ async function analyzeSentimentHF(text, retries = 3) {
     return result;
   } catch (error) {
     console.error("Error fetching from Hugging Face:", error);
-    return [{ label: "Neutral", score: 0.5 }]; // Fallback response
+    return [{ label: "Neutral", score: 0.5 }];
   }
 }
 
-/**
- * Infers mood from text using keyword matching.
- */
+// Infer mood using keywords
 const inferMoodFromKeywords = (text) => {
   const lowerCaseText = text.toLowerCase();
   for (const [mood, keywords] of Object.entries(moodKeywords)) {
     if (keywords.some((keyword) => lowerCaseText.includes(keyword))) {
-      return mood; // Return the first matching mood
+      return mood;
     }
   }
-  return null; // No keyword match found
+  return null;
 };
 
-/**
- * Categorizes the sentiment based on Hugging Face response and keyword matching.
- */
+// Categorize sentiment using Hugging Face result
 const categorizeSentiment = (hfResult, text) => {
-  // First, try keyword matching
   const inferredMood = inferMoodFromKeywords(text);
-  if (inferredMood) {
-    return inferredMood;
+  if (inferredMood) return inferredMood;
+
+  if (!Array.isArray(hfResult) || hfResult.length === 0 || !Array.isArray(hfResult[0])) {
+    return "Neutral";
   }
 
-  // Fallback to Hugging Face sentiment analysis
-  if (!Array.isArray(hfResult) || hfResult.length === 0) {
-    return "Neutral"; // Fallback if no result
-  }
-
-  const sentimentData = hfResult[0]; // Extract first array element
+  const sentimentData = hfResult[0];
   const positive = sentimentData.find((item) => item.label === "POSITIVE");
   const negative = sentimentData.find((item) => item.label === "NEGATIVE");
 
@@ -97,9 +86,7 @@ const categorizeSentiment = (hfResult, text) => {
   return "Neutral";
 };
 
-/**
- * Default uplifting messages for each mood category.
- */
+// Default uplifting messages
 const defaultMessages = {
   "Very Happy": "You're on top of the world! Keep shining!",
   "Happy": "Keep smiling and spreading joy!",
@@ -112,12 +99,9 @@ const defaultMessages = {
   "Lonely": "You are never truly alone. Reach out to someone who cares.",
   "Stressed": "Take a deep breath. You’ve got this!",
   "Hopeful": "Great things are coming your way. Stay positive!",
-  // Add more default messages as needed
 };
 
-/**
- * Creates a new mood entry in the database.
- */
+// Create a new mood entry
 const createMood = async (req, res) => {
   try {
     const { mood_text, user_id } = req.body;
@@ -126,33 +110,17 @@ const createMood = async (req, res) => {
       return res.status(400).json({ error: "mood_text and user_id are required!" });
     }
 
-    // Analyze sentiment using Hugging Face API
     const hfResult = await analyzeSentimentHF(mood_text);
-    console.log("Hugging Face API Response:", hfResult);
-
-    // Categorize mood using combined sentiment analysis and keyword matching
     let mood_category = categorizeSentiment(hfResult, mood_text);
 
-    // Fetch uplifting message from the database or use a default message
     const upliftingMessageRecord = await knex("uplifting_messages")
       .whereRaw("mood_category = ?", [mood_category])
       .orderByRaw("RAND()")
       .first();
 
-    const uplifting_message =
-      upliftingMessageRecord?.message?.trim() || defaultMessages[mood_category] || "Stay positive!";
+    const uplifting_message = upliftingMessageRecord?.message?.trim() || defaultMessages[mood_category] || "Stay positive!";
 
-    console.log(`Mood Category: ${mood_category}`);
-    console.log("Uplifting Message Retrieved:", uplifting_message);
-    console.log("Hugging Face API Response:", hfResult);
-
-    // Insert into database
-    const [newMoodId] = await knex("mood").insert({
-      mood_text,
-      mood_category,
-      user_id,
-    });
-
+    const [newMoodId] = await knex("mood").insert({ mood_text, mood_category, user_id });
     const newMood = await knex("mood").where("id", newMoodId).first();
 
     res.status(201).json({ ...newMood, uplifting_message });
@@ -162,24 +130,12 @@ const createMood = async (req, res) => {
   }
 };
 
-/**
- * Gets all moods from the database.
- */
+// Get all moods
 const getAllMoods = async (_req, res) => {
   try {
     const data = await knex("mood")
-      .select(
-        "mood.id",
-        "mood.mood_text",
-        "mood.mood_category",
-        "mood.user_id",
-        "uplifting_messages.message AS uplifting_message"
-      )
-      .leftJoin(
-        "uplifting_messages",
-        "mood.mood_category",
-        "uplifting_messages.mood_category"
-      );
+      .select("mood.id", "mood.mood_text", "mood.mood_category", "mood.user_id", "uplifting_messages.message AS uplifting_message")
+      .leftJoin("uplifting_messages", "mood.mood_category", "uplifting_messages.mood_category");
 
     res.status(200).json(data);
   } catch (error) {
@@ -188,9 +144,7 @@ const getAllMoods = async (_req, res) => {
   }
 };
 
-/**
- * Gets a single mood entry by ID.
- */
+// Get mood by ID
 const getMoodById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -204,7 +158,5 @@ const getMoodById = async (req, res) => {
     res.status(500).json({ error: `An error occurred: ${error.message}` });
   }
 };
-// Assuming this is your route to get mood trends
 
-
-export { getAllMoods, createMood, getMoodById  };
+export { getAllMoods, createMood, getMoodById };
