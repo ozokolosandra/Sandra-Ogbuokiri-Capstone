@@ -1,0 +1,90 @@
+@use "../../styles/partials/variables" as *;
+
+
+p {
+
+    padding: 0;
+    margin: 0;
+}
+
+
+.btn {
+    &-success {
+        border-radius: 20px;
+        border: 5px solid $button-color1;
+        background-color: $button-color1;
+        color: $white;
+        width: 40%;
+
+
+        &:hover {
+            opacity: 0.5;
+
+            border: 5px solid $button-color1;
+            background-color: $button-color1
+        }
+    }
+
+    &-cancel {
+        border-radius: 20px;
+        border: 1px solid $button-color2;
+        background-color: $button-color2;
+        color: $white;
+        width: 30%;
+    }
+
+    &:hover {
+        opacity: 0.5;
+
+        border: 5px solid $cancel-border;
+        background-color: $cancel-btn;
+    }
+
+    &-edit {
+        border-radius: 20px;
+        border: 5px solid $button-color1;
+        background-color: $button-color1;
+        color: $white;
+        width: 50%;
+    }
+}
+
+h1 {
+    padding: 1rem;
+}
+
+
+.success-message {
+    position: fixed;
+    top: 80px;
+    right: 10px;
+    background-color: $button-color1;
+    color: $white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border-radius: 10px;
+
+    animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    10% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    90% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
