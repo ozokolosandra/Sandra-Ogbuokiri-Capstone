@@ -89,7 +89,7 @@ function AddVibes({ user, onCancel }) {
 
   return (
     <div className="container mt-4">
-      <h2 className="text-center mb-4">Hello, {user?.user_name || "Guest"}</h2>
+      <h2 className="text-center mb-4">Hello {user?.user_name || "Guest"}</h2>
 
       {!upliftingMessage && (
         <form onSubmit={handleSubmit} className="card p-4 shadow-none border-0">
