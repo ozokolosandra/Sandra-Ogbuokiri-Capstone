@@ -64,8 +64,8 @@ function Profile() {
   if (!profile) return <p>Loading profile...</p>;
 
   return (
-    <div className="container mt-5">
-      <h1>Update your profile here!</h1>
+    <div className="container mt-4">
+      <h3>Update your profile here!</h3>
       {showSuccessMessage && (
         <div className="success-message">
           Profile updated successfully!
