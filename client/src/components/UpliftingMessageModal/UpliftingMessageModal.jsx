@@ -7,11 +7,12 @@ function UpliftingMessageModal({ isOpen, onClose, upliftingMessage }) {
     <>
       {isOpen && (
         <>
+        {/* <div className="modal"> */}
           <div
             className="modal fade show d-block"
             tabIndex="-1"
             role="dialog"
-            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+            
           >
             <div className="modal-dialog modal-dialog-centered" role="document">
               <div className="modal-content">
@@ -30,9 +31,9 @@ function UpliftingMessageModal({ isOpen, onClose, upliftingMessage }) {
                 <div className="modal-footer">
                   <button
                     type="button"
-                    className="btn"
+                    className="modal__btn"
                     onClick={onClose}
-                    style={{ backgroundColor: "rgb(116, 22, 116)", color: "white" }}
+                    
                   >
                     Ok
                   </button>
@@ -42,6 +43,7 @@ function UpliftingMessageModal({ isOpen, onClose, upliftingMessage }) {
           </div>
 
           <div className="modal-backdrop fade show"></div>
+        
         </>
       )}
     </>

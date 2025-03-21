@@ -40,11 +40,13 @@ function HomePage() {
       <Header toggleSideNav = {toggleSideNav} />
       <SideNav isSideNavVisible={isSideNavVisible} toggleSideNav={toggleSideNav} />
 
+
       {user ? (
         <AddVibes user={user} onCancel={handleCancel} />
       ) : (
         <p>Please log in to add vibes.</p>
       )}
+      
     </div>
   );
 }

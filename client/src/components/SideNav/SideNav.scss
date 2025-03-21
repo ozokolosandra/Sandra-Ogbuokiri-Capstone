@@ -52,7 +52,6 @@
         color: $white;
     }
 
-
     &-download button {
         background-color: $button-color1;
         color: $white;
@@ -64,14 +63,12 @@
             border: 5px solid $secondary-colour-2;
         }
     }
-
 }
 
 .nav-link.active {
     background-color: $white;
     border: 2px solid $white;
     border-radius: 20px;
-
 }
 
 .nav-link.active .icon-white {
@@ -84,4 +81,87 @@
 
 .nav-link .icon-black {
     filter: invert(0%);
+}
+
+
+.side__nav-canvas {
+    .offcanvas {
+        &.offcanvas-start {
+            background-color: $side-nav-color;
+            color: $white;
+
+            .offcanvas-header {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+                .offcanvas-title {
+                    color: $white;
+                }
+
+                .btn-close {
+                    &.btn-close-white {
+                        filter: invert(1);
+                    }
+                }
+            }
+
+            .offcanvas-body {
+                .nav {
+                    &.flex-column {
+                        .nav-item {
+                            .nav-link {
+                                color: $white;
+                                display: flex;
+                                align-items: center;
+                                padding: 0.5rem 1rem;
+                                border-radius: 4px;
+                                transition: background-color 0.3s, color 0.3s;
+
+                                &:hover {
+                                    background-color: rgba(255, 255, 255, 0.1);
+                                }
+
+                                &.active {
+                                    background-color: $white;
+                                    color: $black;
+                                    border: 2px solid $white;
+
+                                    .icon-white {
+                                        filter: invert(0);
+                                    }
+                                }
+
+                                .icon-white {
+                                    filter: invert(1);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .offcanvas-download {
+                    margin-top: 1rem;
+
+                    .download-btn {
+                        display: flex;
+                        align-items: center;
+                        background-color: $button-color1;
+                        color: $white;
+                        padding: 0.5rem 1rem;
+                        border-radius: 1.25rem;
+                        border: 5px solid $button-color1;
+                        transition: background-color 0.3s;
+
+                        &:hover {
+                            background-color: $gradient-color1;
+                            border: 5px solid $secondary-colour-2;
+                        }
+
+                        img {
+                            margin-right: 0.5rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

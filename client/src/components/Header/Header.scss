@@ -20,7 +20,7 @@
         background-clip: text;
         color: $primary-colour1;
         display: inline-block;
-        padding-left: 20px;
+        padding-left: 1rem;
         cursor: pointer;
         @include pageheader;
     }
@@ -33,6 +33,11 @@
         .menuImg {
             width: 24px;
             height: 24px;
+
+            @include tablet {
+                width: 2rem;
+                height: 2rem;
+            }
         }
 
         &--tooltip {

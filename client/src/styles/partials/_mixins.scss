@@ -40,3 +40,15 @@
         line-height: 32px;
     }
 }
+
+@mixin body-medium {
+    font-family: "Outfit";
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+
+    @include tablet {
+        font-size: 22px;
+        line-height: 24px;
+    }
+}

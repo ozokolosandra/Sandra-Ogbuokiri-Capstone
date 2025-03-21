@@ -18,9 +18,9 @@ function ProfilePage() {
         isSideNavVisible={isSideNavVisible}
         toggleSideNav={toggleSideNav}
       />
-      <div className="main-content">
+      
         <Profile />
-      </div>
+      
     </>
   );
 }

@@ -59,7 +59,7 @@ function LoginPage({ setIsAuthenticated }) {
 
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="email" className="form-label">
+          <label  className="form-label">
             Email
           </label>
           <input
@@ -76,7 +76,7 @@ function LoginPage({ setIsAuthenticated }) {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">
+          <label  className="form-label">
             Password
           </label>
           <input
