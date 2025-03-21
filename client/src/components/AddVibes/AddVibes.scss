@@ -1,73 +1,16 @@
 @use "../../styles/partials/variables" as *;
+@use "../../styles/partials/mixins" as *;
 
 .vibes {
     padding: 1rem;
     font-family: "Outfit";
     margin: 3rem 0;
-
-    &__header {
-        display: flex;
-        justify-content: center;
-    }
-
-    &__vibes {
-        flex-direction: column;
-        display: flex;
-        width: 100%;
-    }
-
-    &__info__date {
-        width: 100%;
-    }
-
-    &__mood__input {
-        width: 90%;
-        height: 50px;
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    &__info {
-        display: flex;
-        flex-direction: row;
-        width: 64%;
-
-    }
-
-    &__error {
-        display: flex;
-        align-items: center;
-        color: $error;
-        margin-bottom: 0.9375rem;
-        margin-top: 0.625rem;
-
-        &__icon {
-            margin-right: 8px;
-            font-size: 18px;
-        }
-
-        &__message {
-            font-size: 14px;
-        }
-    }
 }
 
-.form {
-    &__form__vibes {
-        display: flex;
-        flex-direction: column;
-    }
+span {
+    color: $error;
+    @include body-medium;
 }
-
-.vibes__button {
-    height: 36px;
-    display: flex;
-    justify-content: space-between;
-    gap: 0.25rem;
-}
-
-
-
 
 .submit-btn {
     border: 1px solid $button-color2;
@@ -75,93 +18,28 @@
     width: 50%;
     border-radius: 20px;
     color: $white;
+
+    &:hover {
+        opacity: 0.5;
+    }
 }
 
 .cancel-btn {
     border: 1px solid $button-color2;
     background-color: $button-color2;
-    width: 30%;
-    border-radius: 20px;
+    width: 35%;
+    border-radius: 1.25rem;
+    color: $white;
+
+    &:hover {
+        border: 1px solid $button-color1;
+        background-color: $button-color2;
+        opacity: 0.5;
+    }
 }
 
-input,
-textarea {
-    resize: none;
-    border: 1px solid #bdc5d5;
-
-    padding: 10px;
-    border-radius: 8px;
-}
-
-
-
-
-.uplifting-message {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-    visibility: hidden;
-    /* Keep it in layout but hidden */
-}
-
-.uplifting-message--visible {
-    opacity: 1;
-    transform: translateY(0);
-    visibility: visible;
-    /* Make it visible */
-}
-
-.uplifting-message-modal {
-    width: 250px;
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-.modal-overlay {
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
-
-.close-modal-btn {
-    background-color: #501b74;
-    color: white;
-    padding: 10px 20px;
+.alert.alert-danger.d-flex.align-items-center {
+    margin: 0;
+    background-color: $white;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.close-modal-btn:hover {
-    background-color: #3b1459;
-}
-
-.ok-modal-btn {
-    padding: 3rem;
-    background-color: #501b74;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.ok-modal-btn:hover {
-    padding: 3rem;
-    background-color: #3b1459;
-}
-
-p {
-    padding: 3rem 0;
 }
