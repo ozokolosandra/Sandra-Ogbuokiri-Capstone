@@ -27,11 +27,12 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  TimeScale // Add TimeScale for line chart
+  TimeScale
 );
 
 const Chart = forwardRef((props, ref) => {
   const { chartType, chartData, numberToMood } = props;
+  
   useEffect(() => {
     return () => {
       if (ref.current) {
@@ -39,65 +40,52 @@ const Chart = forwardRef((props, ref) => {
       }
     };
   }, [chartData, chartType]);
-  
-  // Ensure chartData.datasets is defined
+
   if (!chartData.datasets || chartData.datasets.length === 0) {
     return <p>No data available for the chart.</p>;
   }
 
-  // Line chart specific styling
+  // Line chart options
   const lineChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
       x: {
-        type: "time", // Use time scale for x-axis
+        type: "time",
         time: {
-          unit: "day", // Group by day
-          tooltipFormat: "MMM dd", // Format for tooltips (e.g., "Oct 01")
-          displayFormats: {
-            day: "MMM dd", // Format for axis labels (e.g., "Oct 01")
-          },
+          unit: "day",
+          tooltipFormat: "MMM dd",
+          displayFormats: { day: "MMM dd" },
         },
         title: { display: true, text: "Date" },
       },
       y: {
         title: { display: true, text: "Mood Count" },
         min: 0,
-        ticks: {
-          stepSize: 1, // Show whole numbers on y-axis
-        },
+        ticks: { stepSize: 1 },
       },
     },
     plugins: {
-      legend: {
-        display: true,
-        position: "top",
-      },
+      legend: { display: true, position: "top" },
       tooltip: {
         callbacks: {
-          label: (context) => {
-            const label = context.dataset.label || "";
-            const value = context.raw;
-            return `${label}: ${value}`; // Show mood count in tooltip
-          },
+          label: (context) => `${context.dataset.label || ""}: ${context.raw}`,
         },
       },
     },
   };
 
-  // Update the dataset in chartData to use a black line
   const updatedChartData = {
     ...chartData,
     datasets: chartData.datasets.map((dataset) => ({
       ...dataset,
-      borderColor: "#000000", // Set the line color to black
-      backgroundColor: dataset.borderColor, // Use mood color for fill (optional)
-      fill: false, // Do not fill under the line
+      borderColor: "#000000",
+      backgroundColor: dataset.borderColor,
+      fill: false,
     })),
   };
 
-  // Bar chart specific styling
+  // Bar chart options
   const barChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -117,30 +105,10 @@ const Chart = forwardRef((props, ref) => {
       },
     },
     plugins: {
-      legend: {
-        display: false,
-        position: "top",
-        labels: {
-          generateLabels: (chart) => {
-            const datasets = chart.data.datasets;
-            return datasets.map((dataset) => ({
-              text: dataset.label || "",
-              fillStyle: dataset.backgroundColor,
-              strokeStyle: dataset.borderColor,
-              lineWidth: 0,
-              hidden: !chart.isDatasetVisible(dataset.index),
-              index: dataset.index,
-            }));
-          },
-        },
-      },
+      legend: { display: false },
       tooltip: {
         callbacks: {
-          label: (context) => {
-            const label = context.dataset.label || "";
-            const value = context.raw;
-            return `${label}: ${numberToMood[value] || value}`;
-          },
+          label: (context) => `${context.dataset.label || ""}: ${numberToMood[context.raw] || context.raw}`,
         },
       },
     },
@@ -148,7 +116,6 @@ const Chart = forwardRef((props, ref) => {
 
   return (
     <div className="report__chart">
-      {/* Chart Rendering */}
       {chartType === "bar" ? (
         <Bar ref={ref} data={chartData} options={barChartOptions} />
       ) : (
