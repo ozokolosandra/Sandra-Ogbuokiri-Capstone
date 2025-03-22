@@ -1,8 +1,24 @@
 @use "../../styles/partials/variables" as *;
+@use "../../styles/partials/mixins" as *;
 
 p {
     padding: 0;
     margin: 0;
+}
+
+.d-flex.gap-5 {
+    padding-top: 1.5rem;
+    padding-bottom: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    justify-content: space-between;
+    box-shadow: 0 0 0px 1000px $box-shadow inset !important;
+}
+
+button {
+    height: 70px;
+
+    @include body-medium
 }
 
 .btn {
@@ -11,13 +27,18 @@ p {
         border: 5px solid $button-color1;
         background-color: $button-color1;
         color: $white;
-        width: 50%;
+        width: 200px;
+
 
         &:hover {
             opacity: 0.5;
 
             border: 5px solid $button-color1;
             background-color: $button-color1;
+        }
+
+        @include tablet {
+            width: 250px;
         }
     }
 
@@ -26,7 +47,7 @@ p {
         border: 1px solid $button-color2;
         background-color: $button-color2;
         color: $white;
-        width: 40%;
+        width: 200px;
     }
 
     &:hover {
@@ -41,7 +62,7 @@ p {
         border: 5px solid $button-color1;
         background-color: $button-color1;
         color: $white;
-        width: 50%;
+        width: 200px;
 
         &:hover {
             opacity: 0.5;

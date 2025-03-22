@@ -23,17 +23,17 @@ function AddVibes({ user, onCancel }) {
     let hasError = false;
 
     if (!startDate) {
-      setDateError("Start Date cannot be empty.");
+      setDateError("Start date cannot be empty.");
       hasError = true;
     }
 
     if (!endDate) {
-      setDateError("End Date cannot be empty.");
+      setDateError("End date cannot be empty.");
       hasError = true;
     }
 
     if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
-      setDateError("End Date cannot be before the Start Date.");
+      setDateError("End date cannot be before the Start Date.");
       hasError = true;
     }
 
@@ -89,7 +89,7 @@ function AddVibes({ user, onCancel }) {
 
   return (
     <div className="container mt-4">
-      <span className="hello-text">Hello {user?.user_name}</span>
+      <article className="hello-text">Hello {user?.user_name}</article>
       
 
       {!upliftingMessage && (

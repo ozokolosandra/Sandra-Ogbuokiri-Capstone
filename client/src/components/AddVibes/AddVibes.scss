@@ -7,13 +7,15 @@
 
 }
 
-input {
+input,
+label {
     @include body-large
 }
 
 span {
+    padding-bottom: 0.0025rem !important;
     color: $error;
-    @include body-medium;
+    @include body-small;
 }
 
 .submit-btn {
@@ -56,68 +58,14 @@ textarea.form-control {
     padding: 2rem;
 }
 
-:root {
-    --gradient-start: #682195;
-    --gradient-mid: #9c22c2;
-    --gradient-end: #b3405e;
-    --pirple: #eed5df;
-
-}
-
-
-.animated-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: linear-gradient(120deg,
-            var(--gradient-start) 50%,
-            var(--gradient-mid) 50%,
-            var(--gradient-end) 100%,
-            var(--pirple) 100%);
-    background-size: 300% 300%;
-    z-index: -2;
-}
-
-
 span {
-    background: linear-gradient(90deg, var(--pirple), var(--gradient-mid), var(--gradient-end));
-    background-size: 200% 200%;
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    animation: gradient-animation 5s linear infinite, subtleFloat 2s ease-in-out infinite alternate;
     display: flex;
     justify-content: center;
+}
 
+article {
+    color: $gradient-color1;
+    text-align: center;
     @include title-style;
-}
 
-@keyframes gradient-animation {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-@keyframes subtleFloat {
-    0% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-2px);
-    }
-
-    100% {
-        transform: translateY(0);
-    }
 }

@@ -30,7 +30,7 @@
 }
 
 @mixin pageheader {
-    font-family: "Poppins";
+    font-family: "Outfit";
     font-weight: 500;
     font-size: 28px;
     line-height: 22px;
@@ -65,6 +65,20 @@
     }
 }
 
+@mixin body-small {
+    font-family: "Outfit";
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+
+    @include tablet {
+        font-size: 18px;
+        line-height: 22px;
+    }
+}
+
+
+
 @mixin button {
     font-family: "Outfit";
     font-weight: 500;
@@ -78,7 +92,7 @@
 }
 
 @mixin title-style {
-    font-family: "Outfit";
+    font-family: "Poppins";
     font-weight: 700;
     font-size: 24px;
     line-height: 32px;

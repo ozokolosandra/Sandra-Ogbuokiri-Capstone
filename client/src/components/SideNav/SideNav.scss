@@ -10,7 +10,8 @@
 
         &.offcanvas-start {
             background: linear-gradient(to bottom,
-                    rgba(79, 35, 165, 0.98), rgba(44, 13, 85, 1));
+                    rgba(79, 35, 165, 0.98),
+                    rgba(204 190 225));
             color: $white;
             width: 250px;
             transform: translateX(-100%);
@@ -113,21 +114,21 @@
 // Mobile styles
 @include mobile {
     .side__nav-canvas .offcanvas.offcanvas-start {
-        width: 90%; // Full width on mobile
+        width: 94%;
     }
 
     .side-nav-open {
-        overflow: hidden; // Prevent scrolling when side nav is open
+        overflow: hidden;
     }
 }
 
 // Tablet styles
 @include tablet {
     .side__nav-canvas .offcanvas.offcanvas-start {
-        width: 250px; // Fixed width for tablet
+        width: 250px;
     }
 
     .side-nav-open {
-        margin-left: 250px; // Push content to the right
+        margin-left: 250px;
     }
 }
