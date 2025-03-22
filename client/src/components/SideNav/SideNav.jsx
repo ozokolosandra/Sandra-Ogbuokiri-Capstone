@@ -24,6 +24,7 @@ const SideNav = ({ isSideNavVisible, toggleSideNav, downloadChart }) => {
     // Cleanup function to remove the class when the component unmounts
     return () => {
       document.body.classList.remove("side-nav-open");
+      
     };
   }, [isSideNavVisible]);
 

@@ -12,8 +12,12 @@ function HomePage() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isSideNavVisible, setIsSideNavVisible] = useState(false);
+
   const toggleSideNav = () => {
-    setIsSideNavVisible(!isSideNavVisible); 
+    setIsSideNavVisible((prev) => {
+      console.log("Toggling Side Nav. Current State:", !prev); // Debugging
+      return !prev; // Toggle the state
+    });
   };
 
   useEffect(() => {
@@ -22,7 +26,7 @@ function HomePage() {
     const user_name = localStorage.getItem("user_name");
 
     if (!token) {
-      navigate("/login"); 
+      navigate("/login");
       return;
     }
 
@@ -37,16 +41,14 @@ function HomePage() {
 
   return (
     <div>
-      <Header toggleSideNav = {toggleSideNav} />
+      <Header toggleSideNav={toggleSideNav} />
       <SideNav isSideNavVisible={isSideNavVisible} toggleSideNav={toggleSideNav} />
-
 
       {user ? (
         <AddVibes user={user} onCancel={handleCancel} />
       ) : (
         <p>Please log in to add vibes.</p>
       )}
-      
     </div>
   );
 }

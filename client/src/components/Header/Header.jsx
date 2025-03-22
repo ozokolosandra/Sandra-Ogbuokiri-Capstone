@@ -12,6 +12,7 @@ const Header = ({ toggleSideNav }) => {
   const handleMouseLeave = () => {
     setIsHovered(false); 
   };
+  
 
   return (
     <>
