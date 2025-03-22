@@ -55,7 +55,12 @@ textarea.form-control {
 }
 
 .d-flex.justify-content-between {
-    padding: 2rem;
+    padding: 0;
+    gap: 2rem;
+
+    @include tablet {
+        padding: 2rem;
+    }
 }
 
 span {

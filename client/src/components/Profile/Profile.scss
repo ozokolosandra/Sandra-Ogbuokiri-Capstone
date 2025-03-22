@@ -76,7 +76,20 @@ h3 {
     padding: 1rem 0.5rem 1rem 0rem;
 }
 
-.success-message {
+.modal-footer {
+    gap: 1rem;
+    flex-wrap: nowrap
+}
+
+.btn-secondary {
+    @extend .btn-cancel;
+}
+
+.btn-primary {
+    @extend .btn-success
+}
+
+.b .success-message {
     position: fixed;
     top: 80px;
     right: 10px;
