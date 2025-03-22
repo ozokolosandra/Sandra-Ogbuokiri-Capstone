@@ -64,3 +64,27 @@
         line-height: 32px;
     }
 }
+
+@mixin button {
+    font-family: "Outfit";
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 32px;
+
+    @include tablet {
+        font-size: 22px;
+        line-height: 32px;
+    }
+}
+
+@mixin title-style {
+    font-family: "Outfit";
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 32px;
+
+    @include tablet {
+        font-size: 32px;
+        line-height: 32px;
+    }
+}

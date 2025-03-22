@@ -89,7 +89,8 @@ function AddVibes({ user, onCancel }) {
 
   return (
     <div className="container mt-4">
-      <h2 className="text-center mb-4">Hello {user?.user_name || "Guest"}</h2>
+      <span className="hello-text">Hello {user?.user_name}</span>
+      
 
       {!upliftingMessage && (
         <form onSubmit={handleSubmit} className="card p-4 shadow-none border-0">
@@ -153,7 +154,7 @@ function AddVibes({ user, onCancel }) {
             <button type="submit" className="submit-btn">
               Submit
             </button>
-            <button type="button" className="btn-cancel" onClick={onCancel}>
+            <button type="button" className="btn-cancel-btn" onClick={onCancel}>
               Cancel
             </button>
           </div>

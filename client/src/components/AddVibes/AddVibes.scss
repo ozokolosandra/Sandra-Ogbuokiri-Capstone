@@ -19,26 +19,25 @@ span {
 .submit-btn {
     border: 1px solid $button-color2;
     background-color: $button-color1;
-    width: 50%;
+    width: 200px;
     border-radius: 20px;
     color: $white;
-    @include body-medium;
+    @include button;
 
     &:hover {
         opacity: 0.5;
     }
 }
 
-.cancel-btn {
+.btn-cancel-btn {
     border: 1px solid $button-color2;
     background-color: $button-color2;
-    width: 35%;
+    width: 120px;
     border-radius: 1.25rem;
     color: $white;
+    @include button;
 
     &:hover {
-        border: 1px solid $button-color1;
-        background-color: $button-color2;
         opacity: 0.5;
     }
 }
@@ -47,4 +46,78 @@ span {
     margin: 0;
     background-color: $primary-colour1;
     border: none;
+}
+
+textarea.form-control {
+    resize: none;
+}
+
+.d-flex.justify-content-between {
+    padding: 2rem;
+}
+
+:root {
+    --gradient-start: #682195;
+    --gradient-mid: #9c22c2;
+    --gradient-end: #b3405e;
+    --pirple: #eed5df;
+
+}
+
+
+.animated-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(120deg,
+            var(--gradient-start) 50%,
+            var(--gradient-mid) 50%,
+            var(--gradient-end) 100%,
+            var(--pirple) 100%);
+    background-size: 300% 300%;
+    z-index: -2;
+}
+
+
+span {
+    background: linear-gradient(90deg, var(--pirple), var(--gradient-mid), var(--gradient-end));
+    background-size: 200% 200%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: gradient-animation 5s linear infinite, subtleFloat 2s ease-in-out infinite alternate;
+    display: flex;
+    justify-content: center;
+
+    @include title-style;
+}
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes subtleFloat {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-2px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
 }
