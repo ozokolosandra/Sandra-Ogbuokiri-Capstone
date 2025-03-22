@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import userImg from "../../assets/images/user.svg";
@@ -12,6 +12,20 @@ import "./SideNav.scss";
 
 const SideNav = ({ isSideNavVisible, toggleSideNav, downloadChart }) => {
   const location = useLocation();
+
+  // Add/remove class to body when side nav is open/closed
+  useEffect(() => {
+    if (isSideNavVisible) {
+      document.body.classList.add("side-nav-open");
+    } else {
+      document.body.classList.remove("side-nav-open");
+    }
+
+    // Cleanup function to remove the class when the component unmounts
+    return () => {
+      document.body.classList.remove("side-nav-open");
+    };
+  }, [isSideNavVisible]);
 
   return (
     <>
@@ -38,11 +52,7 @@ const SideNav = ({ isSideNavVisible, toggleSideNav, downloadChart }) => {
                     location.pathname === "/" ? "active" : ""
                   }`}
                 >
-                  <img
-                    src={homeImg}
-                    alt="Home"
-                    className="me-2"
-                  />
+                  <img src={homeImg} alt="Home" className="me-2" />
                   Home
                 </Link>
               </li>
@@ -54,11 +64,7 @@ const SideNav = ({ isSideNavVisible, toggleSideNav, downloadChart }) => {
                     location.pathname === "/profile" ? "active" : ""
                   }`}
                 >
-                  <img
-                    src={userImg}
-                    alt="Profile"
-                    className="me-2"
-                  />
+                  <img src={userImg} alt="Profile" className="me-2" />
                   Profile
                 </Link>
               </li>
@@ -70,11 +76,7 @@ const SideNav = ({ isSideNavVisible, toggleSideNav, downloadChart }) => {
                     location.pathname === "/report" ? "active" : ""
                   }`}
                 >
-                  <img
-                    src={reportImg}
-                    alt="Reports"
-                    className="me-2"
-                  />
+                  <img src={reportImg} alt="Reports" className="me-2" />
                   Reports
                 </Link>
               </li>
@@ -86,11 +88,7 @@ const SideNav = ({ isSideNavVisible, toggleSideNav, downloadChart }) => {
                     location.pathname === "/rewards" ? "active" : ""
                   }`}
                 >
-                  <img
-                    src={rewardsImg}
-                    alt="Rewards"
-                    className="me-2"
-                  />
+                  <img src={rewardsImg} alt="Rewards" className="me-2" />
                   Rewards
                 </Link>
               </li>
@@ -102,11 +100,7 @@ const SideNav = ({ isSideNavVisible, toggleSideNav, downloadChart }) => {
                     location.pathname === "/history" ? "active" : ""
                   }`}
                 >
-                  <img
-                    src={vibeHistoryImg}
-                    alt="History"
-                    className="me-2"
-                  />
+                  <img src={vibeHistoryImg} alt="History" className="me-2" />
                   History
                 </Link>
               </li>
@@ -118,11 +112,7 @@ const SideNav = ({ isSideNavVisible, toggleSideNav, downloadChart }) => {
                     location.pathname === "/logout" ? "active" : ""
                   }`}
                 >
-                  <img
-                    src={logoutImg}
-                    alt="Logout"
-                    className="me-2"
-                  />
+                  <img src={logoutImg} alt="Logout" className="me-2" />
                   Logout
                 </Link>
               </li>
