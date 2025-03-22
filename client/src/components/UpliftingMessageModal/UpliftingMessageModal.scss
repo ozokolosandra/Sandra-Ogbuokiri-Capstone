@@ -12,13 +12,27 @@
 }
 
 
-.modal__btn {
-    background-color: $button-color1;
-    border-radius: 5px;
-    border: 1px solid $button-color2;
-    color: $white;
+.modal {
+    &__btn {
+        background-color: $button-color1;
+        border-radius: 5px;
+        border: 1px solid $button-color2;
+        color: $white;
+        width: 7.5rem;
+        @include body-large;
 
-    &:hover {
-        opacity: 0.5;
+
+        &:hover {
+            opacity: 0.5;
+        }
+    }
+
+    &-body {
+        @include uplifiting-text;
+    }
+
+    &-header {
+        justify-content: center;
+        @include uplifing-header;
     }
 }
