@@ -110,18 +110,34 @@ const createMood = async (req, res) => {
       return res.status(400).json({ error: "mood_text and user_id are required!" });
     }
 
+    // Analyze sentiment and categorize mood
     const hfResult = await analyzeSentimentHF(mood_text);
     let mood_category = categorizeSentiment(hfResult, mood_text);
 
+    // Check if the mood_category exists in the uplifting_messages table
     const upliftingMessageRecord = await knex("uplifting_messages")
-      .whereRaw("mood_category = ?", [mood_category])
-      .orderByRaw("RAND()")
+      .where("mood_category", mood_category)
       .first();
 
-    const uplifting_message = upliftingMessageRecord?.message?.trim() || defaultMessages[mood_category] || "Stay positive!";
+    // If the mood_category doesn't exist, insert it with a default message
+    if (!upliftingMessageRecord) {
+      const defaultMessage = defaultMessages[mood_category] || "Stay positive!";
+      await knex("uplifting_messages").insert({
+        mood_category,
+        message: defaultMessage,
+      });
+    }
 
+    // Insert the new mood entry
     const [newMoodId] = await knex("mood").insert({ mood_text, mood_category, user_id });
     const newMood = await knex("mood").where("id", newMoodId).first();
+
+    // Fetch the uplifting message again (in case it was just inserted)
+    const updatedUpliftingMessageRecord = await knex("uplifting_messages")
+      .where("mood_category", mood_category)
+      .first();
+
+    const uplifting_message = updatedUpliftingMessageRecord?.message || defaultMessages[mood_category] || "Stay positive!";
 
     res.status(201).json({ ...newMood, uplifting_message });
   } catch (error) {
