@@ -1,8 +1,7 @@
 import initKnex from "knex";
 import configuration from "../knexfile.js";
-const knex = initKnex(configuration);
 import bcrypt from "bcryptjs";
-//const bcrypt = require("bcrypt");
+const knex = initKnex(configuration);
 
  const getAllUsers = async (req, res) => {
     try {
@@ -35,7 +34,7 @@ import bcrypt from "bcryptjs";
     const userId = req.user.id; // Extracted from JWT in middleware
     const { user_name, email, password } = req.body;
 
-    // Initialize update object
+   
     const updateData = { user_name, email };
 
     // If password is provided, hash it and add to update object
@@ -45,7 +44,7 @@ import bcrypt from "bcryptjs";
       updateData.password = hashedPassword;
     }
 
-    // Update the user profile
+    
     await knex("users").where("id", userId).update(updateData);
 
     res.status(200).json({ message: "Profile updated successfully" });
