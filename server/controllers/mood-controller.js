@@ -4,7 +4,7 @@ import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
 // Hugging Face API configuration
-const HF_API_URL = "https://api-inference.huggingface.co/models/distilbert/distilbert-base-uncased-finetuned-sst-2-english";
+const HF_API_URL = process.env.HF_API_URL;
 const HF_API_TOKEN = process.env.HF_API_TOKEN;
 
 // Keyword mapping for mood categories
