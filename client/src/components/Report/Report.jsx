@@ -156,8 +156,8 @@ const Report = forwardRef((props, ref) => {
       }
   
       // Format dates as YYYY-MM-DD
-      const formattedStartDate = start; // Already in YYYY-MM-DD format
-      const formattedEndDate = end; // Already in YYYY-MM-DD format
+      const formattedStartDate = start; 
+      const formattedEndDate = end; 
   
       console.log("Fetching line chart data for:", {
         start_date: formattedStartDate,
@@ -197,11 +197,10 @@ const Report = forwardRef((props, ref) => {
       setChartData({ labels: [], datasets: [] }); 
     }
   };
-  // Fetch reports logic
+  
   const fetchReports = async (start, end) => {
-    console.log("Fetching reports for:", { start, end });
+   
 
-    // Retrieve user_id from localStorage
     const user_id = localStorage.getItem("user_id");
 
     if (!user_id) {
@@ -234,8 +233,6 @@ const Report = forwardRef((props, ref) => {
   };
 
   useEffect(() => {
-    console.log("useEffect triggered for:", { durationType, startDate, endDate, chartType });
-
     if (durationType === "weekly") {
       const end = new Date();
       const start = new Date();
