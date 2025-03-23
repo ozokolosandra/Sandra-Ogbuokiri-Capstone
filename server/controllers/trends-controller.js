@@ -7,64 +7,63 @@ const getMoodTrends = async (req, res) => {
   try {
     const { start_date, end_date, user_id } = req.query;
 
-    // Validate required parameters
     if (!start_date || !end_date || !user_id) {
       return res.status(400).json({ error: "Missing required parameters: start_date, end_date, or user_id." });
     }
 
-    // Validate date format (YYYY-MM-DD) and ensure it's a valid date
     const isValidDate = (date) => {
       const regex = /^\d{4}-\d{2}-\d{2}$/;
-      if (!regex.test(date)) return false;
-
-      const parsedDate = new Date(date);
-      return !isNaN(parsedDate.getTime()); // Check if the date is valid
+      console.log(regex);
+      return regex.test(date) && !isNaN(new Date(date).getTime());
+      
+      
     };
 
-    // Call isValidDate to validate start_date and end_date
     if (!isValidDate(start_date) || !isValidDate(end_date)) {
       return res.status(400).json({ error: "Invalid date format. Use YYYY-MM-DD." });
     }
 
-    console.log("Start Date:", start_date, "End Date:", end_date); // Log the query params
+    if (new Date(start_date) > new Date(end_date)) {
+      return res.status(400).json({ error: "start_date cannot be later than end_date." });
+    }
 
-    // Format dates for SQL query
-    const startDate = new Date(start_date).toISOString();
-    const endDate = new Date(`${end_date}T23:59:59.999Z`).toISOString();
+    console.log("Start Date:", start_date, "End Date:", end_date);
 
-    // Query the database to get moods within the specified time range
-    const moodsInTimePeriod = await knex("mood")
-      .select("mood_category", "created_at")
-      .where("user_id", user_id) // Filter by user_id
-      .where("created_at", ">=", startDate) // Start of the day
-      .where("created_at", "<=", endDate) // End of the day
-      .orderBy("created_at", "asc");
+    // Query using SQL aggregation for efficiency
+    const moodTrends = await knex("mood")
+      .select(knex.raw("DATE(created_at) as date, mood_category, COUNT(*) as count"))
+      .where("user_id", user_id)
+      .whereBetween("created_at", [`${start_date} 00:00:00`, `${end_date} 23:59:59`])
+      .groupBy("date", "mood_category")
+      .orderBy("date", "asc");
 
-    console.log("SQL Query Result:", moodsInTimePeriod); // Log the result from the query
-
-    // If no results returned
-    if (moodsInTimePeriod.length === 0) {
+    if (moodTrends.length === 0) {
       console.log("No moods found within the given time period.");
     }
 
-    // Group moods by date and category
-    const moodTrends = moodsInTimePeriod.reduce((acc, { mood_category, created_at }) => {
-      const date = new Date(created_at).toISOString().split("T")[0]; // Use YYYY-MM-DD format
+    // Reformat data to match the desired response
+    const formattedTrends = moodTrends.reduce((acc, { date, mood_category, count }) => {
       if (!acc[date]) {
-        acc[date] = {};
+        acc[date] = [];
       }
-      if (!acc[date][mood_category]) {
-        acc[date][mood_category] = 0;
-      }
-      acc[date][mood_category] += 1;
+      acc[date].push({ mood_category, count });
       return acc;
     }, {});
-
-    // Send the response with mood trends and time period
-    res.status(200).json({ mood_trends: moodTrends, time_period: { start_date, end_date } });
+    
+    const flattenedTrends = Object.entries(formattedTrends).flatMap(([date, moods]) => {
+      return moods.map(({ mood_category, count }) => ({
+        date,
+        mood_category,
+        count,
+      }));
+    });
+    
+    console.log(flattenedTrends);
+    
+    res.status(200).json({ mood_trends: formattedTrends, time_period: { start_date, end_date } });
 
   } catch (error) {
-    console.error("Error fetching mood trends:", error.message, error.stack);
+    console.error("Error fetching mood trends:", error.message);
     res.status(500).json({ error: "An error occurred while fetching mood trends." });
   }
 };

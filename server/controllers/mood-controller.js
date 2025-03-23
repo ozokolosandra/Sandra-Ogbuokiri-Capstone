@@ -104,7 +104,7 @@ const defaultMessages = {
 // Create a new mood entry
 const createMood = async (req, res) => {
   try {
-    const { mood_text, user_id } = req.body;
+    const { mood_text, user_id, date } = req.body;
 
     if (!mood_text || !user_id) {
       return res.status(400).json({ error: "mood_text and user_id are required!" });
@@ -119,7 +119,6 @@ const createMood = async (req, res) => {
       .where("mood_category", mood_category)
       .first();
 
-    // If the mood_category doesn't exist, insert it with a default message
     if (!upliftingMessageRecord) {
       const defaultMessage = defaultMessages[mood_category] || "Stay positive!";
       await knex("uplifting_messages").insert({
@@ -128,11 +127,18 @@ const createMood = async (req, res) => {
       });
     }
 
-    // Insert the new mood entry
-    const [newMoodId] = await knex("mood").insert({ mood_text, mood_category, user_id });
+    // Insert the new mood entry with the selected date as created_at
+    const [newMoodId] = await knex("mood").insert({
+      mood_text,
+      mood_category,
+      user_id,
+      created_at: date || knex.fn.now(), 
+      updated_at: knex.fn.now(),
+    });
+
     const newMood = await knex("mood").where("id", newMoodId).first();
 
-    // Fetch the uplifting message again (in case it was just inserted)
+    // Fetch the uplifting message again
     const updatedUpliftingMessageRecord = await knex("uplifting_messages")
       .where("mood_category", mood_category)
       .first();
@@ -145,6 +151,7 @@ const createMood = async (req, res) => {
     res.status(500).json({ error: `An error occurred: ${error.message}` });
   }
 };
+
 
 // Get all moods
 const getAllMoods = async (_req, res) => {

@@ -16,6 +16,7 @@ import {
   TimeScale,
 } from "chart.js";
 import "./Chart.scss";
+import { max } from "date-fns";
 
 // Register Chart.js components
 ChartJS.register(
@@ -62,6 +63,7 @@ const Chart = forwardRef((props, ref) => {
       y: {
         title: { display: true, text: "Mood Count" },
         min: 0,
+        max:20,
         ticks: { stepSize: 1 },
       },
     },

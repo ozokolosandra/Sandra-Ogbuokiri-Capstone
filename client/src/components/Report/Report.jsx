@@ -29,6 +29,7 @@ const Report = forwardRef((props, ref) => {
     Triumphant: "#C9CBCF",
     Anxious: "#FF6F61",
     Stressed: "#6B5B95",
+    Remorseful:"#ffffff"
   };
 
   // Function to transform data for bar chart
@@ -58,38 +59,44 @@ const Report = forwardRef((props, ref) => {
 
   // Function to transform data for line chart
   const transformDataForLineChart = (mood_trends) => {
-    // Group moods by date
+    // Initialize an empty object to store the mood data grouped by date
     const moodByDate = {};
-
+  
+    // Loop through the object, assuming it's an object where the keys are dates
     Object.entries(mood_trends).forEach(([date, moods]) => {
-      moodByDate[date] = [];
-      Object.entries(moods).forEach(([mood, count]) => {
-        moodByDate[date].push({ mood, count });
+      const formattedDate = new Date(date).toISOString().split("T")[0]; // Format date to YYYY-MM-DD
+      if (!moodByDate[formattedDate]) {
+        moodByDate[formattedDate] = {};
+      }
+      moods.forEach(({ mood_category, count }) => {
+        moodByDate[formattedDate][mood_category] = count;
       });
     });
-
-    // Create labels (dates) and data points
-    const labels = Object.keys(moodByDate).sort(); // Sort dates
+  
+    // Create labels (dates) and datasets (moods)
+    const labels = Object.keys(moodByDate).sort(); // Sort dates in ascending order
+  
     const datasets = Object.keys(moodColors).map((mood) => ({
       label: mood,
       data: labels.map((date) => {
-        const moodsOnDate = moodByDate[date];
-        const moodEntry = moodsOnDate.find((entry) => entry.mood === mood);
-        return moodEntry ? moodEntry.count : 0;
+        const moodData = moodByDate[date];
+        return moodData[mood] || 0; // Return 0 if no data for the mood on that date
       }),
       borderColor: moodColors[mood],
       fill: false,
     }));
-
+  
     return {
       labels,
       datasets,
     };
   };
+  
 
   // Function to fetch data for the bar chart
   const fetchBarChartData = async (start, end, user_id) => {
     try {
+      
       // Format dates as YYYY-MM-DD
       const formattedStartDate = new Date(start).toISOString().split("T")[0];
       const formattedEndDate = new Date(end).toISOString().split("T")[0];
@@ -130,21 +137,34 @@ const Report = forwardRef((props, ref) => {
   // Function to fetch data for the line chart
   const fetchLineChartData = async (start, end, user_id) => {
     try {
-      // Format dates as YYYY-MM-DD
-      const formattedStartDate = new Date(start).toISOString().split("T")[0];
-      const formattedEndDate = new Date(end).toISOString().split("T")[0];
+      // Validate user_id
+      if (!user_id) {
+        throw new Error("User ID is missing!");
+      }
   
-      console.log("Fetching line chart data for:", { formattedStartDate, formattedEndDate, user_id });
+      // Validate start and end dates
+      if (!start || !end) {
+        throw new Error("Start date or end date is missing!");
+      }
+  
+      if (new Date(start) > new Date(end)) {
+        throw new Error("Start date must be before end date!");
+      }
+  
+      // Format dates as YYYY-MM-DD
+      const formattedStartDate = start; // Already in YYYY-MM-DD format
+      const formattedEndDate = end; // Already in YYYY-MM-DD format
+  
+      console.log("Fetching line chart data for:", {
+        start_date: formattedStartDate,
+        end_date: formattedEndDate,
+        user_id,
+      });
   
       // Fetch data for line chart from /trends endpoint
       const response = await axios.get("http://localhost:8080/trends", {
         params: { start_date: formattedStartDate, end_date: formattedEndDate, user_id },
       });
-  
-      // Check if the response is valid
-      if (!response || !response.data) {
-        throw new Error("Invalid API response");
-      }
   
       console.log("Line Chart API Response:", response.data);
   
@@ -158,6 +178,8 @@ const Report = forwardRef((props, ref) => {
       // Transform data for line chart
       const transformedData = transformDataForLineChart(mood_trends);
   
+      console.log("Transformed Line Chart Data:", transformedData);
+  
       if (transformedData.labels.length > 0) {
         setChartData(transformedData);
         setErrorMessage(""); // Clear error message
@@ -166,8 +188,8 @@ const Report = forwardRef((props, ref) => {
         setChartData({ labels: [], datasets: [] }); // Clear chart data
       }
     } catch (error) {
-      console.error("Error fetching line chart data:", error.message, error.stack);
-      setErrorMessage("Failed to fetch line chart data. Please try again.");
+      console.error("Error fetching line chart data:", error.response?.data || error.message);
+      setErrorMessage(`Failed to fetch line chart data: ${error.response?.data?.message || error.message}`);
       setChartData({ labels: [], datasets: [] }); // Clear chart data on error
     }
   };
