@@ -101,7 +101,7 @@ function Login({ setIsAuthenticated }) {
         <p>
           Don't have an account?{" "}
           <button
-            className="btn login-link"
+            className=" login-link"
             onClick={() => navigate("/register")}
           >
             Register here
