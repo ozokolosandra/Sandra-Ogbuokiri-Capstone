@@ -24,18 +24,21 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        
+        {/* Protected Routes */}
         <Route
           path="/"
           element={<ProtectedRoute isAuthenticated={isAuthenticated} />}
         >
-          <Route path="logout" element={<LogoutPage />} />
+          <Route
+            path="logout"
+            element={<LogoutPage setIsAuthenticated={setIsAuthenticated} />}
+          />
           <Route path="report" element={<ReportPage />} />
           <Route path="profile" element={<ProfilePage />} />
-          <Route index element={<HomePage />} /> 
+          <Route index element={<HomePage />} /> {/* Default route */}
         </Route>
 
-      
+        {/* Public Routes */}
         <Route
           path="/login"
           element={
@@ -48,7 +51,7 @@ function App() {
         />
         <Route path="/register" element={<RegisterPage />} />
 
-        
+        {/* Catch-all for 404 Not Found */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

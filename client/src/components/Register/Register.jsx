@@ -1,17 +1,26 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import "./Register.scss"
+import "./Register.scss";
 import axios from 'axios';
-
+import errorIcon from "../../assets/images/error.svg"
 const Register = () => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
+
+  function isValid(){
+    if(!email || !password|| !userName){
+      return false;
+  }
+  return true;
+}
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(isValid())
 
     try {
       const response = await axios.post('http://localhost:8080/auth/register', {
@@ -20,8 +29,13 @@ const Register = () => {
         password,
       });
 
-      // On successful registration, navigate to login page
-      navigate('/login');
+      // On successful registration, show success message
+      setSuccessMessage(
+        <span>
+          Registration successful!{'   '}
+          <Link to="/login" className="register__success-link">Click here to login</Link>
+        </span>
+      );
     } catch (error) {
       // Handle error if registration fails
       if (error.response) {
@@ -34,8 +48,10 @@ const Register = () => {
 
   return (
     <div className="container mt-5">
-      <h1 className="mb-4">Create Account</h1>
+      <h3 className="mb-4">Create Account</h3>
       {error && <p className="text-danger">{error}</p>}
+      {successMessage && <p className="text-success register__success">{successMessage}</p>}
+
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="user_name" className="form-label">Username</label>
@@ -45,7 +61,7 @@ const Register = () => {
             className="form-control"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
-            required
+            
           />
         </div>
         <div className="mb-3">
@@ -56,7 +72,7 @@ const Register = () => {
             className="form-control"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
+            
           />
         </div>
         <div className="mb-3">
@@ -67,18 +83,19 @@ const Register = () => {
             className="form-control"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
+            
           />
         </div>
         <button type="submit" className="btn register-btn">Register</button>
       </form>
+
       <div className="mt-3">
         <div className='register__links'>
-        <p>
-          Already have an account? <Link to="/login"> <div className='register__links-link'>Login here</div></Link>
-        </p>
+          <p>
+            Already have an account? <Link to="/login"><span className='register__links-link'>Login here</span></Link>
+          </p>
+        </div>
       </div>
-    </div>
     </div>
   );
 };

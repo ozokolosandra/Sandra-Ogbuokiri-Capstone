@@ -1,5 +1,5 @@
 @use "../../styles/partials/variables" as *;
-;
+@use "../../styles/partials/mixins" as *;
 
 .register {
     &-btn {
@@ -34,6 +34,20 @@
             }
         }
 
+        &__success-link span {
+
+            color: $button-color1 !important;
+            margin-top: 10px !important;
+            margin-bottom: 1rem !important;
+            ;
+            text-align: center !important;
+            @include body-medium;
+        }
+
 
     }
+}
+
+.text-success.register__success p {
+    gap: 0.5rem;
 }
