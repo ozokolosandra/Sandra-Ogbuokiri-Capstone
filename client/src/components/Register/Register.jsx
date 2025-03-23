@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import "./Register.scss";
 import axios from 'axios';
-import errorIcon from "../../assets/images/error.svg"
+import errorIcon from "../../assets/images/error.svg"; // Ensure the path is correct
+
 const Register = () => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState('');
@@ -10,17 +11,44 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({
+    userName: false,
+    email: false,
+    password: false,
+  });
 
+  // Function to validate individual fields
+  const validateField = (fieldName, value) => {
+    setFieldErrors((prevErrors) => ({
+      ...prevErrors,
+      [fieldName]: !value, // Set to true if the field is empty
+    }));
+  };
 
-  function isValid(){
-    if(!email || !password|| !userName){
-      return false;
+  // Handle input changes
+  const handleInputChange = (fieldName, setter) => (e) => {
+    const value = e.target.value;
+    setter(value); // Update the state for the field
+    validateField(fieldName, value); // Validate the field in real-time
+  };
+
+  // Check if the form is valid
+  function isValid() {
+    const errors = {
+      userName: !userName,
+      email: !email,
+      password: !password,
+    };
+    setFieldErrors(errors); // Update field errors
+    return !Object.values(errors).some((error) => error); // Return true if no errors
   }
-  return true;
-}
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(isValid())
+    if (!isValid()) {
+      setError('Please fill in all fields.');
+      return;
+    }
 
     try {
       const response = await axios.post('http://localhost:8080/auth/register', {
@@ -54,37 +82,50 @@ const Register = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="user_name" className="form-label">Username</label>
+          <label  className="form-label">Username</label>
           <input
             type="text"
             id="user_name"
-            className="form-control"
+            className={`form-control ${fieldErrors.userName ? 'is-invalid' : ''}`}
             value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            
+            onChange={handleInputChange('userName', setUserName)}
           />
+          {fieldErrors.userName && (
+            <div className="invalid-feedback d-flex align-items-center">
+              Username is required.
+            </div>
+          )}
         </div>
         <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email</label>
+          <label  className="form-label">Email</label>
           <input
             type="email"
             id="email"
-            className="form-control"
+            className={`form-control ${fieldErrors.email ? 'is-invalid' : ''}`}
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            
+            onChange={handleInputChange('email', setEmail)}
           />
+          {fieldErrors.email && (
+            <div className="invalid-feedback d-flex align-items-center">
+              
+              Email is required.
+            </div>
+          )}
         </div>
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">Password</label>
+          <label  className="form-label">Password</label>
           <input
             type="password"
             id="password"
-            className="form-control"
+            className={`form-control ${fieldErrors.password ? 'is-invalid' : ''}`}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            
+            onChange={handleInputChange('password', setPassword)}
           />
+          {fieldErrors.password && (
+            <div className="invalid-feedback d-flex align-items-center">
+              Password is required.
+            </div>
+          )}
         </div>
         <button type="submit" className="btn register-btn">Register</button>
       </form>
