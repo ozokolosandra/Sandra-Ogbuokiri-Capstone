@@ -152,20 +152,36 @@ const createMood = async (req, res) => {
     res.status(500).json({ error: `An error occurred: ${error.message}` });
   }
 };
-
-
-
-// Get all moods
-const getAllMoods = async (_req, res) => {
+const getAllMoods = async (req, res) => {
   try {
-    const data = await knex("mood")
-      .select("mood.id", "mood.mood_text", "mood.mood_category", "mood.user_id", "uplifting_messages.message AS uplifting_message")
-      .leftJoin("uplifting_messages", "mood.mood_category", "uplifting_messages.mood_category");
+    console.log(req.user); // Log user info to check if it's properly populated
 
-    res.status(200).json(data);
+    // Check if req.user is defined
+    if (!req.user || !req.user.id) {
+      return res.status(400).json({ error: "User ID is missing or invalid." });
+    }
+
+    const userId = req.user.id; // Extract userId from decoded token
+
+    const moods = await knex("mood")
+      .select(
+        "mood.id",
+        "mood.mood_text",
+        "mood.mood_category",
+        "mood.user_id",
+        "uplifting_messages.message as uplifting_message"
+      )
+      .leftJoin(
+        "uplifting_messages",
+        "mood.mood_category",
+        "uplifting_messages.mood_category"
+      )
+      .where("mood.user_id", userId);
+
+    res.status(200).json(moods);
   } catch (error) {
     console.error("Error retrieving moods:", error);
-    res.status(400).send(`Error retrieving moods: ${error}`);
+    res.status(500).json({ error: `Error retrieving moods: ${error.message}` });
   }
 };
 
