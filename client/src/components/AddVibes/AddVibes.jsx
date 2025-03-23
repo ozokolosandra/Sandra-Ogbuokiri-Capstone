@@ -7,33 +7,20 @@ import UpliftingMessageModal from "../UpliftingMessageModal/UpliftingMessageModa
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function AddVibes({ user, onCancel }) {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [date, setDate] = useState("");
   const [moodText, setMoodText] = useState("");
   const [upliftingMessage, setUpliftingMessage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dateError, setDateError] = useState("");
   const [moodError, setMoodError] = useState("");
-  const [startDateTouched, setStartDateTouched] = useState(false);
-  const [endDateTouched, setEndDateTouched] = useState(false);
+  const [dateTouched, setDateTouched] = useState(false);
   const [moodTextTouched, setMoodTextTouched] = useState(false);
 
-  
   const isFormValid = () => {
     let hasError = false;
 
-    if (!startDate) {
-      setDateError("Start date cannot be empty.");
-      hasError = true;
-    }
-
-    if (!endDate) {
-      setDateError("End date cannot be empty.");
-      hasError = true;
-    }
-
-    if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
-      setDateError("End date cannot be before the Start Date.");
+    if (!date) {
+      setDateError("Date cannot be empty.");
       hasError = true;
     }
 
@@ -54,8 +41,7 @@ function AddVibes({ user, onCancel }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setStartDateTouched(true);
-    setEndDateTouched(true);
+    setDateTouched(true);
     setMoodTextTouched(true);
 
     if (!isFormValid()) {
@@ -65,16 +51,15 @@ function AddVibes({ user, onCancel }) {
     try {
       const response = await axios.post("http://localhost:8080/moods", {
         mood_text: moodText,
-        start_date: startDate,
-        end_date: endDate,
+        date,
         user_id: user?.id,
       });
-
+      console.log(date);
+      
       setUpliftingMessage(response.data.uplifting_message);
       setIsModalOpen(true);
       setMoodText("");
-      setStartDate("");
-      setEndDate("");
+      setDate("");
       setDateError("");
       setMoodError("");
     } catch (error) {
@@ -90,39 +75,24 @@ function AddVibes({ user, onCancel }) {
   return (
     <div className="container mt-4">
       <article className="hello-text">Hello {user?.user_name}</article>
-      
 
       {!upliftingMessage && (
         <form onSubmit={handleSubmit} className="card p-4 shadow-none border-0">
           <div className="mb-3">
-            <label className="form-label">Start Date:</label>
+            <label className="form-label">Date:</label>
             <input
               type="date"
               className="form-control"
-              value={startDate}
+              value={date}
               onChange={(e) => {
-                setStartDate(e.target.value);
+                setDate(e.target.value);
                 setDateError("");
               }}
-              onFocus={() => setStartDateTouched(true)}
+              onFocus={() => setDateTouched(true)}
             />
           </div>
 
-          <div className="mb-3">
-            <label className="form-label">End Date:</label>
-            <input
-              type="date"
-              className="form-control"
-              value={endDate}
-              onChange={(e) => {
-                setEndDate(e.target.value);
-                setDateError("");
-              }}
-              onFocus={() => setEndDateTouched(true)}
-            />
-          </div>
-
-          {dateError && (startDateTouched || endDateTouched) && (
+          {dateError && dateTouched && (
             <div className="alert alert-danger d-flex align-items-center">
               <img src={errorIcon} alt="error" className="me-2" width="20" />
               <span>{dateError}</span>

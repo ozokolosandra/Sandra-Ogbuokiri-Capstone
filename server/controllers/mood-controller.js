@@ -104,46 +104,47 @@ const defaultMessages = {
 // Create a new mood entry
 const createMood = async (req, res) => {
   try {
-    const { mood_text, user_id, date } = req.body;
+    const { mood_text, user_id, date } = req.body; // Expect `date` from the frontend
 
-    if (!mood_text || !user_id) {
-      return res.status(400).json({ error: "mood_text and user_id are required!" });
+    if (!mood_text || !user_id || !date) {
+      return res.status(400).json({ error: "mood_text, user_id, and date are required!" });
     }
 
-    // Analyze sentiment and categorize mood
-    const hfResult = await analyzeSentimentHF(mood_text);
-    let mood_category = categorizeSentiment(hfResult, mood_text);
+    // Validate date
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      return res.status(400).json({ error: "Invalid date format." });
+    }
 
-    // Check if the mood_category exists in the uplifting_messages table
+    // Analyze sentiment
+    const hfResult = await analyzeSentimentHF(mood_text);
+    const mood_category = categorizeSentiment(hfResult, mood_text);
+
+    // Get or insert an uplifting message
     const upliftingMessageRecord = await knex("uplifting_messages")
       .where("mood_category", mood_category)
       .first();
 
     if (!upliftingMessageRecord) {
       const defaultMessage = defaultMessages[mood_category] || "Stay positive!";
-      await knex("uplifting_messages").insert({
-        mood_category,
-        message: defaultMessage,
-      });
+      await knex("uplifting_messages").insert({ mood_category, message: defaultMessage });
     }
 
-    // Insert the new mood entry with the selected date as created_at
+    // Insert mood
     const [newMoodId] = await knex("mood").insert({
       mood_text,
       mood_category,
       user_id,
-      created_at: date || knex.fn.now(), 
+      created_at: parsedDate,
       updated_at: knex.fn.now(),
     });
 
     const newMood = await knex("mood").where("id", newMoodId).first();
-
-    // Fetch the uplifting message again
     const updatedUpliftingMessageRecord = await knex("uplifting_messages")
       .where("mood_category", mood_category)
       .first();
 
-    const uplifting_message = updatedUpliftingMessageRecord?.message || defaultMessages[mood_category] || "Stay positive!";
+    const uplifting_message = updatedUpliftingMessageRecord?.message || defaultMessages[mood_category];
 
     res.status(201).json({ ...newMood, uplifting_message });
   } catch (error) {
@@ -151,6 +152,7 @@ const createMood = async (req, res) => {
     res.status(500).json({ error: `An error occurred: ${error.message}` });
   }
 };
+
 
 
 // Get all moods

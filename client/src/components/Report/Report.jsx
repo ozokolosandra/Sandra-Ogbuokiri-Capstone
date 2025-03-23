@@ -59,12 +59,10 @@ const Report = forwardRef((props, ref) => {
 
   // Function to transform data for line chart
   const transformDataForLineChart = (mood_trends) => {
-    // Initialize an empty object to store the mood data grouped by date
     const moodByDate = {};
   
-    // Loop through the object, assuming it's an object where the keys are dates
     Object.entries(mood_trends).forEach(([date, moods]) => {
-      const formattedDate = new Date(date).toISOString().split("T")[0]; // Format date to YYYY-MM-DD
+      const formattedDate = new Date(date).toISOString().split("T")[0];
       if (!moodByDate[formattedDate]) {
         moodByDate[formattedDate] = {};
       }
@@ -73,18 +71,21 @@ const Report = forwardRef((props, ref) => {
       });
     });
   
-    // Create labels (dates) and datasets (moods)
-    const labels = Object.keys(moodByDate).sort(); // Sort dates in ascending order
+    const labels = Object.keys(moodByDate).sort();
   
-    const datasets = Object.keys(moodColors).map((mood) => ({
-      label: mood,
-      data: labels.map((date) => {
-        const moodData = moodByDate[date];
-        return moodData[mood] || 0; // Return 0 if no data for the mood on that date
-      }),
-      borderColor: moodColors[mood],
-      fill: false,
-    }));
+    const datasets = Object.keys(moodColors)
+      .map((mood) => {
+        const data = labels.map((date) => moodByDate[date]?.[mood] || 0);
+        const hasData = data.some((count) => count > 0);
+        if (!hasData) return null; // Remove datasets with no data
+        return {
+          label: mood,
+          data,
+          borderColor: moodColors[mood],
+          fill: false,
+        };
+      })
+      .filter(Boolean); // Remove null entries
   
     return {
       labels,
