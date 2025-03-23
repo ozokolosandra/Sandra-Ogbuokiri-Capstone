@@ -13,13 +13,11 @@
     }
 }
 
-/* Axis Styling */
 .chart-axis-title {
     font-size: 14px;
     font-weight: bold;
     color: #333;
 }
-
 
 .chart-tooltip {
     background-color: rgba(0, 0, 0, 0.7);
@@ -29,11 +27,9 @@
     border-radius: 4px;
 }
 
-
 .line-chart {
     stroke-width: 1;
 }
-
 
 .bar-chart .bar {
     fill-opacity: 0.8;

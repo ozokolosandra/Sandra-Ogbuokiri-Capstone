@@ -2,14 +2,12 @@
 @use "../../styles/partials/mixins" as *;
 
 .form-label {
-
     font-family: "Outfit";
-
 }
 
 input,
 label {
-    @include body-large
+    @include body-large;
 }
 
 span {
@@ -78,5 +76,4 @@ article {
     color: $gradient-color1;
     text-align: center;
     @include title-style;
-
 }

@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 import { Bar, Line } from "react-chartjs-2";
-import 'chartjs-adapter-date-fns';
+import "chartjs-adapter-date-fns";
 import { useEffect } from "react";
 
 import {
@@ -16,7 +16,6 @@ import {
   TimeScale,
 } from "chart.js";
 import "./Chart.scss";
-import { max } from "date-fns";
 
 // Register Chart.js components
 ChartJS.register(
@@ -33,7 +32,7 @@ ChartJS.register(
 
 const Chart = forwardRef((props, ref) => {
   const { chartType, chartData, numberToMood } = props;
-  
+
   useEffect(() => {
     return () => {
       if (ref.current) {
@@ -63,7 +62,7 @@ const Chart = forwardRef((props, ref) => {
       y: {
         title: { display: true, text: "Mood Count" },
         min: 0,
-        max:20,
+        max: 20,
         ticks: { stepSize: 1 },
       },
     },
@@ -110,7 +109,10 @@ const Chart = forwardRef((props, ref) => {
       legend: { display: false },
       tooltip: {
         callbacks: {
-          label: (context) => `${context.dataset.label || ""}: ${numberToMood[context.raw] || context.raw}`,
+          label: (context) =>
+            `${context.dataset.label || ""}: ${
+              numberToMood[context.raw] || context.raw
+            }`,
         },
       },
     },

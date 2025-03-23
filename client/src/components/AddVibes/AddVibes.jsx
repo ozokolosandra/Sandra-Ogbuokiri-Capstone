@@ -6,6 +6,8 @@ import "./AddVibes.scss";
 import UpliftingMessageModal from "../UpliftingMessageModal/UpliftingMessageModal";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+const baseURL = import.meta.env.VITE_API_URL;
+
 function AddVibes({ user, onCancel }) {
   const [date, setDate] = useState("");
   const [moodText, setMoodText] = useState("");
@@ -49,13 +51,13 @@ function AddVibes({ user, onCancel }) {
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/moods", {
+      const response = await axios.post(`${baseURL}/moods`, {
         mood_text: moodText,
         date,
         user_id: user?.id,
       });
       console.log(date);
-      
+
       setUpliftingMessage(response.data.uplifting_message);
       setIsModalOpen(true);
       setMoodText("");

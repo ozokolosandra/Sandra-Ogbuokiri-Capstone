@@ -1,9 +1,9 @@
 import Header from "../../components/Header/Header";
-import MoodHistory from "../../components/MoodHistory/MoodHistory";
+import VibesHistory from "../../components/VibesHistory/VibesHistory";
 import { useState } from "react";
 import SideNav from "../../components/SideNav/SideNav";
 
-const MoodHistoryPage = () => {
+const VibesHistoryPage = () => {
     const [isSideNavVisible, setIsSideNavVisible] = useState(false); 
     const toggleSideNav = () => {
         setIsSideNavVisible(!isSideNavVisible);
@@ -16,9 +16,9 @@ const MoodHistoryPage = () => {
         isSideNavVisible={isSideNavVisible}
         toggleSideNav={toggleSideNav}
       />
-      <MoodHistory />
+      <VibesHistory />
     </div>
   );
 };
 
-export default MoodHistoryPage;
+export default VibesHistoryPage;

@@ -7,13 +7,8 @@ function UpliftingMessageModal({ isOpen, onClose, upliftingMessage }) {
     <>
       {isOpen && (
         <>
-        {/* <div className="modal"> */}
-          <div
-            className="modal fade show d-block"
-            tabIndex="-1"
-            role="dialog"
-            
-          >
+          {/* <div className="modal"> */}
+          <div className="modal fade show d-block" tabIndex="-1" role="dialog">
             <div className="modal-dialog modal-dialog-centered" role="document">
               <div className="modal-content">
                 <div className="modal-header">
@@ -33,7 +28,6 @@ function UpliftingMessageModal({ isOpen, onClose, upliftingMessage }) {
                     type="button"
                     className="modal__btn"
                     onClick={onClose}
-                    
                   >
                     Ok
                   </button>
@@ -43,7 +37,6 @@ function UpliftingMessageModal({ isOpen, onClose, upliftingMessage }) {
           </div>
 
           <div className="modal-backdrop fade show"></div>
-        
         </>
       )}
     </>

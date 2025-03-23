@@ -3,14 +3,9 @@
 @use "../../styles/partials/global" as *;
 @use "../../styles/partials/typography" as *;
 
-
 .modal.fade.show.d-block {
-
     background: $modal-black;
-
-
 }
-
 
 .modal {
     &__btn {
@@ -21,18 +16,17 @@
         width: 7.5rem;
         @include body-large;
 
-
         &:hover {
             opacity: 0.5;
         }
     }
 
     &-message {
-        @include uplifiting-text;
+        @include body-medium;
     }
 
     &-title {
         justify-content: center;
-        @include uplifing-header;
+        @include body-large;
     }
 }

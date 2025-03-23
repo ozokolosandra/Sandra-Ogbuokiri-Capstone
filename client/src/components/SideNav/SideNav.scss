@@ -26,11 +26,8 @@
             .offcanvas-header {
                 border-bottom: 1px solid $off-white;
 
-
-
                 @include tablet {
                     border: none;
-
                 }
 
                 @include pageheader;

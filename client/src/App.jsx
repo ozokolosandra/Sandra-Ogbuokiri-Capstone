@@ -8,7 +8,7 @@ import ReportPage from "./pages/ReportPage/ReportPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
-import MoodHistoryPage from "./pages/MoodHistoryPage/MoodHistoryPage";
+import VibesHistoryPage from "./pages/VibesHistoryPage/VibesHistoryPage";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -34,7 +34,7 @@ function App() {
             path="logout"
             element={<LogoutPage setIsAuthenticated={setIsAuthenticated} />}
           />
-          <Route path="history" element ={<MoodHistoryPage/>}/>
+          <Route path="history" element ={<VibesHistoryPage/>}/>
           <Route path="report" element={<ReportPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route index element={<HomePage />} /> 

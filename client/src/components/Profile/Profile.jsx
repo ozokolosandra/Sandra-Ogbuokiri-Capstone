@@ -2,8 +2,10 @@ import "./Profile.scss";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaTimes, FaCheck } from "react-icons/fa";
-import { Modal, Button } from "react-bootstrap"; // Using Bootstrap's Modal
+import { Modal, Button } from "react-bootstrap"; 
 import "bootstrap/dist/css/bootstrap.min.css";
+const baseURL = import.meta.env.VITE_API_URL;
+
 
 function Profile() {
   const [profile, setProfile] = useState(null);
@@ -21,7 +23,7 @@ function Profile() {
   async function fetchProfile() {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:8080/users/me", {
+      const response = await axios.get(`${baseURL}/users/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -57,7 +59,7 @@ function Profile() {
     setPasswordData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Show the confirm modal before actually saving
+ 
   const handleSaveClick = () => {
     // If user wants to change password, check if fields match
     if (passwordData.newPassword || passwordData.confirmPassword) {
@@ -69,18 +71,18 @@ function Profile() {
     setShowConfirmModal(true);
   };
 
-  // Called when user confirms changes in the modal
+ 
   const handleConfirmChanges = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      // Example of how you might structure password data in the request body
+     
       const updateData = {
         ...editedProfile,
         ...(passwordData.newPassword && { password: passwordData.newPassword }),
       };
 
-      await axios.put("http://localhost:8080/users/me", updateData, {
+      await axios.put(`${baseURL}/users/me`, updateData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -97,7 +99,6 @@ function Profile() {
       console.error("Error updating profile:", error.response?.data || error.message);
     } finally {
       setShowConfirmModal(false);
-      // Reset password fields
       setPasswordData({ newPassword: "", confirmPassword: "" });
     }
   };
@@ -146,7 +147,7 @@ function Profile() {
 
       {isEditing && (
         <>
-          <hr />
+          
           <h5>Change Password</h5>
           <div className="mb-3">
             <label className="form-label">New Password:</label>

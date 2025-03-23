@@ -20,11 +20,8 @@ const SideNav = ({ isSideNavVisible, toggleSideNav, downloadChart }) => {
     } else {
       document.body.classList.remove("side-nav-open");
     }
-
-    // Cleanup function to remove the class when the component unmounts
     return () => {
       document.body.classList.remove("side-nav-open");
-      
     };
   }, [isSideNavVisible]);
 
@@ -32,7 +29,9 @@ const SideNav = ({ isSideNavVisible, toggleSideNav, downloadChart }) => {
     <>
       <div className="side__nav-canvas">
         <div
-          className={`offcanvas offcanvas-start ${isSideNavVisible ? "show" : ""}`}
+          className={`offcanvas offcanvas-start ${
+            isSideNavVisible ? "show" : ""
+          }`}
           id="sidebarMenu"
           tabIndex="-1"
         >

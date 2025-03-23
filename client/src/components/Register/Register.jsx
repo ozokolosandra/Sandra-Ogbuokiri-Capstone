@@ -4,6 +4,7 @@ import "./Register.scss";
 import axios from 'axios';
 import validator from 'email-validator';
 
+const baseURL = import.meta.env.VITE_API_URL;
 const Register = () => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState('');
@@ -69,7 +70,7 @@ const Register = () => {
     }
 
     try {
-      await axios.post('http://localhost:8080/auth/register', {
+      await axios.post(`${baseURL}/auth/register`, {
         user_name: userName,
         email,
         password,
