@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import "./Register.scss";
 import axios from 'axios';
+import validator from 'email-validator';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -30,6 +31,12 @@ const Register = () => {
         ...prevErrors,
         password: !isValid,
       }));
+    } else if (fieldName === 'email') {
+      isValid = validator.validate(value);
+      setFieldErrors((prevErrors) => ({
+        ...prevErrors,
+        email: !isValid,
+      }));
     } else {
       setFieldErrors((prevErrors) => ({
         ...prevErrors,
@@ -47,7 +54,7 @@ const Register = () => {
   function isValid() {
     const errors = {
       userName: !userName,
-      email: !email,
+      email: !validator.validate(email),
       password: !validatePassword(password),
     };
     setFieldErrors(errors);
@@ -105,20 +112,20 @@ const Register = () => {
         <div className="mb-3">
           <label className="form-label">Email</label>
           <input
-            type="email"
-            id="email"
+            type="text"
+            
             className={`form-control ${fieldErrors.email ? 'is-invalid' : ''}`}
             value={email}
             onChange={handleInputChange('email', setEmail)}
           />
-          {fieldErrors.email && <div className="invalid-feedback">Email is required.</div>}
+          {fieldErrors.email && <div className="invalid-feedback">Please enter a valid email.</div>}
         </div>
 
         <div className="mb-3">
           <label className="form-label">Password</label>
           <input
             type="password"
-            id="password"
+           
             className={`form-control ${fieldErrors.password ? 'is-invalid' : ''}`}
             value={password}
             onChange={handleInputChange('password', setPassword)}

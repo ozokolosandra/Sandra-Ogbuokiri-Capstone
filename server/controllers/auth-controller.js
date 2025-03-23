@@ -1,6 +1,5 @@
 import initKnex from "knex";
 import configuration from "../knexfile.js";
-
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";

@@ -11,12 +11,9 @@
 
         &:hover {
             opacity: 0.5;
-            opacity: 0.5;
             border: 5px solid $button-color1;
-            background-color: $button-color1
+            background-color: $button-color1;
         }
-
-
     }
 
     &__links {
@@ -33,21 +30,43 @@
                 opacity: 0.5;
             }
         }
+    }
 
-        &__success-link span {
-
-            color: $button-color1 !important;
-            margin-top: 10px !important;
-            margin-bottom: 1rem !important;
-            ;
-            text-align: center !important;
-            @include body-medium;
-        }
-
-
+    &__success-link a {
+        color: $button-color1 !important;
+        margin-top: 10px !important;
+        margin-bottom: 1rem !important;
     }
 }
 
-.text-success.register__success p {
-    gap: 0.5rem;
+.text-success.register__success {
+    display: flex;
+    justify-content: space-around !important;
+    gap: 1rem !important;
+
+    p {
+        gap: 0.5rem;
+    }
+
+    span {
+        color: $button-color1;
+        margin-top: 10px;
+        margin-bottom: 1rem;
+
+        text-align: center;
+        @include body-small;
+    }
+
+    a {
+        color: $button-color1;
+        margin-left: 1rem !important;
+    }
+}
+
+h3 {
+    padding: 0 !important;
+}
+
+.container.mt-5 {
+    margin-bottom: 2rem;
 }
