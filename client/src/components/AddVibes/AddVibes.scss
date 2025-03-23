@@ -57,6 +57,12 @@ textarea.form-control {
 .d-flex.justify-content-between {
     padding: 0;
     gap: 2rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    justify-content: space-between;
+    box-shadow: 0 0 0px 1000px $box-shadow inset !important;
 
     @include tablet {
         padding: 2rem;

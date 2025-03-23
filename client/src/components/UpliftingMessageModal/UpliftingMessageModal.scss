@@ -27,11 +27,11 @@
         }
     }
 
-    &-body {
+    &-message {
         @include uplifiting-text;
     }
 
-    &-header {
+    &-title {
         justify-content: center;
         @include uplifing-header;
     }

@@ -10,39 +10,45 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 
 function App() {
-  // Manage the user's authentication state.
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log("Checking authentication: token =", token);
     if (token) {
       setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
     }
   }, []);
 
   return (
     <BrowserRouter>
       <Routes>
+        
         <Route
-          path="/*"
+          path="/"
           element={<ProtectedRoute isAuthenticated={isAuthenticated} />}
         >
           <Route path="logout" element={<LogoutPage />} />
           <Route path="report" element={<ReportPage />} />
-          <Route path="profile" element ={<ProfilePage/>} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route index element={<HomePage />} /> 
         </Route>
 
-        <Route
-          path="/"
-          element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />}
-        />
+      
         <Route
           path="/login"
-          element={<LoginPage setIsAuthenticated={setIsAuthenticated} />}
+          element={
+            isAuthenticated ? (
+              <Navigate to="/" />
+            ) : (
+              <LoginPage setIsAuthenticated={setIsAuthenticated} />
+            )
+          }
         />
-
         <Route path="/register" element={<RegisterPage />} />
 
+        
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

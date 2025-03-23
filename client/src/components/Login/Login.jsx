@@ -4,7 +4,7 @@ import axios from "axios";
 import emailValidator from "email-validator";
 import "./Login.scss"; // Assuming you still want custom styles
 
-function LoginPage({ setIsAuthenticated }) {
+function Login({ setIsAuthenticated }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState(""); // Email state
   const [password, setPassword] = useState(""); // Password state
@@ -112,4 +112,4 @@ function LoginPage({ setIsAuthenticated }) {
   );
 }
 
-export default LoginPage;
+export default Login;

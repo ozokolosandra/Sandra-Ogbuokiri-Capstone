@@ -25,7 +25,7 @@ function UpliftingMessageModal({ isOpen, onClose, upliftingMessage }) {
                     aria-label="Close"
                   ></button>
                 </div>
-                <div className="modal-body">
+                <div className="modal-message">
                   <p>{upliftingMessage}</p>
                 </div>
                 <div className="modal-footer">

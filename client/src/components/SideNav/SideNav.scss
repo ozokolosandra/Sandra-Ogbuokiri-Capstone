@@ -5,6 +5,8 @@
 
 // Side navigation styles
 .side__nav-canvas {
+    font-family: "Poppins";
+
     .offcanvas {
         visibility: visible;
 
@@ -24,9 +26,14 @@
             .offcanvas-header {
                 border-bottom: 1px solid $off-white;
 
+
+
                 @include tablet {
                     border: none;
+
                 }
+
+                @include pageheader;
 
                 .offcanvas-title {
                     color: $white;
