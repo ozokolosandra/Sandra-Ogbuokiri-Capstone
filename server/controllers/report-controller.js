@@ -4,7 +4,7 @@ const knex = initKnex(configuration);
 
 const getReport = async (req, res) => {
   try {
-    const { user_id, startDate, endDate } = req.query;
+    const { user_id, start_date, end_date } = req.query;
 
     // Validate user_id
     if (!user_id) {
@@ -13,26 +13,28 @@ const getReport = async (req, res) => {
 
     // Validate date formats
     const isValidDate = (dateString) => /^\d{4}-\d{2}-\d{2}$/.test(dateString);
-    if (startDate && !isValidDate(startDate)) {
+    if (start_date && !isValidDate(start_date)) {
       return res
         .status(400)
         .json({ error: "Invalid start date format. Use YYYY-MM-DD." });
     }
-    if (endDate && !isValidDate(endDate)) {
+    if (end_date && !isValidDate(end_date)) {
       return res
         .status(400)
         .json({ error: "Invalid end date format. Use YYYY-MM-DD." });
     }
 
+    // Build the query
     const query = knex("mood")
       .select("mood_category", "created_at")
       .where("user_id", user_id);
 
-    if (startDate) {
-      query.where("created_at", ">=", new Date(startDate + "T00:00:00Z"));
+    // Filter by date range if provided
+    if (start_date) {
+      query.where("created_at", ">=", new Date(start_date + "T00:00:00Z"));
     }
-    if (endDate) {
-      query.where("created_at", "<=", new Date(endDate + "T23:59:59Z"));
+    if (end_date) {
+      query.where("created_at", "<=", new Date(end_date + "T23:59:59Z"));
     }
 
     // Log the SQL query for debugging
@@ -42,27 +44,31 @@ const getReport = async (req, res) => {
 
     // Log the moods array for debugging
     console.log(`Moods: ${JSON.stringify(moods)}`);
-    console.log("Final SQL Query:", query.toString());
 
     // Handle empty mood data
     if (moods.length === 0) {
       return res.status(404).json({
-        message: `No mood data found for user ID: ${user_id}.`,
+        message: `No mood data found for user ID: ${user_id} within the specified date range.`,
       });
     }
 
-    // Aggregate mood data by counting occurrences of each mood_category
-    const moodCounts = {};
-    moods.forEach(({ mood_category }) => {
-      moodCounts[mood_category] = (moodCounts[mood_category] || 0) + 1;
+    // Aggregate mood data by date
+    const moodDataByDate = {};
+    moods.forEach(({ mood_category, created_at }) => {
+      const date = created_at.toISOString().split("T")[0]; // Extract date (YYYY-MM-DD)
+      if (!moodDataByDate[date]) {
+        moodDataByDate[date] = {};
+      }
+      moodDataByDate[date][mood_category] =
+        (moodDataByDate[date][mood_category] || 0) + 1;
     });
 
     // Construct report data
     const reportData = {
-      mood_trends: moodCounts,
+      mood_trends: moodDataByDate, // Mood data grouped by date
       time_period: {
-        start_date: startDate || "No start date provided",
-        end_date: endDate || "No end date provided",
+        start_date: start_date || "No start date provided",
+        end_date: end_date || "No end date provided",
       },
     };
 

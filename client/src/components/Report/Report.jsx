@@ -34,15 +34,20 @@ const Report = forwardRef((props, ref) => {
 
   // Function to transform data for bar chart
   const transformDataForBarChart = (mood_trends) => {
-    const moodData = Object.entries(mood_trends).map(([mood_category, count]) => ({
-      mood_category,
-      count,
-    }));
-
-    const labels = moodData.map((mood) => mood.mood_category);
-    const counts = moodData.map((mood) => mood.count);
+    const moodCounts = {};
+  
+    // Aggregate mood counts across all dates
+    Object.values(mood_trends).forEach((moods) => {
+      Object.entries(moods).forEach(([mood_category, count]) => {
+        moodCounts[mood_category] = (moodCounts[mood_category] || 0) + count;
+      });
+    });
+  
+    // Extract mood categories and their counts
+    const labels = Object.keys(moodCounts);
+    const counts = Object.values(moodCounts);
     const backgroundColors = labels.map((mood) => moodColors[mood] || "#CCCCCC");
-
+  
     return {
       labels,
       datasets: [
@@ -77,7 +82,7 @@ const Report = forwardRef((props, ref) => {
       .map((mood) => {
         const data = labels.map((date) => moodByDate[date]?.[mood] || 0);
         const hasData = data.some((count) => count > 0);
-        if (!hasData) return null; // Remove datasets with no data
+        if (!hasData) return null; 
         return {
           label: mood,
           data,
@@ -85,7 +90,7 @@ const Report = forwardRef((props, ref) => {
           fill: false,
         };
       })
-      .filter(Boolean); // Remove null entries
+      .filter(Boolean); 
   
     return {
       labels,
@@ -97,53 +102,51 @@ const Report = forwardRef((props, ref) => {
   // Function to fetch data for the bar chart
   const fetchBarChartData = async (start, end, user_id) => {
     try {
-      
       // Format dates as YYYY-MM-DD
       const formattedStartDate = new Date(start).toISOString().split("T")[0];
       const formattedEndDate = new Date(end).toISOString().split("T")[0];
-
+  
       console.log("Fetching bar chart data for:", { formattedStartDate, formattedEndDate, user_id });
-
+  
       // Fetch data for bar chart from /reports endpoint
       const response = await axios.get("http://localhost:8080/reports", {
         params: { start_date: formattedStartDate, end_date: formattedEndDate, user_id },
       });
-
+  
       console.log("Bar Chart API Response:", response.data);
-
+  
       const { mood_trends } = response.data;
-
+  
       // Ensure mood_trends is an object
       if (typeof mood_trends !== "object" || mood_trends === null) {
         throw new Error("Invalid mood_trends data");
       }
-
+  
       // Transform data for bar chart
       const transformedData = transformDataForBarChart(mood_trends);
-
+  
       if (transformedData.labels.length > 0) {
         setChartData(transformedData);
-        setErrorMessage(""); // Clear error message
+        setErrorMessage("");
       } else {
         setErrorMessage("No mood data available for the selected duration.");
-        setChartData({ labels: [], datasets: [] }); // Clear chart data
+        setChartData({ labels: [], datasets: [] });
       }
     } catch (error) {
       console.error("Error fetching bar chart data:", error);
       setErrorMessage("Failed to fetch bar chart data. Please try again.");
-      setChartData({ labels: [], datasets: [] }); // Clear chart data on error
+      setChartData({ labels: [], datasets: [] });
     }
   };
-
   // Function to fetch data for the line chart
   const fetchLineChartData = async (start, end, user_id) => {
     try {
-      // Validate user_id
+      
       if (!user_id) {
         throw new Error("User ID is missing!");
       }
   
-      // Validate start and end dates
+     
       if (!start || !end) {
         throw new Error("Start date or end date is missing!");
       }
@@ -162,7 +165,7 @@ const Report = forwardRef((props, ref) => {
         user_id,
       });
   
-      // Fetch data for line chart from /trends endpoint
+     
       const response = await axios.get("http://localhost:8080/trends", {
         params: { start_date: formattedStartDate, end_date: formattedEndDate, user_id },
       });
@@ -183,15 +186,15 @@ const Report = forwardRef((props, ref) => {
   
       if (transformedData.labels.length > 0) {
         setChartData(transformedData);
-        setErrorMessage(""); // Clear error message
+        setErrorMessage(""); 
       } else {
         setErrorMessage("No mood data available for the selected duration.");
-        setChartData({ labels: [], datasets: [] }); // Clear chart data
+        setChartData({ labels: [], datasets: [] }); 
       }
     } catch (error) {
       console.error("Error fetching line chart data:", error.response?.data || error.message);
       setErrorMessage(`Failed to fetch line chart data: ${error.response?.data?.message || error.message}`);
-      setChartData({ labels: [], datasets: [] }); // Clear chart data on error
+      setChartData({ labels: [], datasets: [] }); 
     }
   };
   // Fetch reports logic
@@ -207,14 +210,14 @@ const Report = forwardRef((props, ref) => {
       return;
     }
 
-    // Validate start and end dates
+    
     if (!start || !end) {
       console.error("Start date or end date is missing!");
       setErrorMessage("Please select a valid date range.");
       return;
     }
 
-    // Call the appropriate function based on the chart type
+    
     if (chartType === "bar") {
       await fetchBarChartData(start, end, user_id);
     } else if (chartType === "line") {
@@ -248,7 +251,7 @@ const Report = forwardRef((props, ref) => {
       const formattedEndDate = endDate.toISOString().split("T")[0];
       fetchReports(formattedStartDate, formattedEndDate);
     }
-  }, [durationType, startDate, endDate, chartType]); // Add chartType to dependencies
+  }, [durationType, startDate, endDate, chartType]); 
 
   return (
     <div className="report__container">
