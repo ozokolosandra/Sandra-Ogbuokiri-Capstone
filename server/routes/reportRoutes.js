@@ -6,7 +6,8 @@ const reportRouter = express.Router();
 reportRouter.route("/")
 .get(reportController.getReport)
 
-;
 reportRouter.route("/:id")
 .get(reportController.getReportById)
+
+
 export default reportRouter;

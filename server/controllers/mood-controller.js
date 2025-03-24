@@ -18,7 +18,7 @@ const moodKeywords = {
   Neutral: ["neutral", "indifferent", "okay", "fine"],
 };
 
-console.log(HF_API_TOKEN);
+
 
 // Analyze sentiment using Hugging Face API
 async function analyzeSentimentHF(text, retries = 3) {
@@ -110,17 +110,17 @@ const createMood = async (req, res) => {
       return res.status(400).json({ error: "mood_text, user_id, and date are required!" });
     }
 
-    // Validate date
+    
     const parsedDate = new Date(date);
     if (isNaN(parsedDate.getTime())) {
       return res.status(400).json({ error: "Invalid date format." });
     }
 
-    // Analyze sentiment
+    
     const hfResult = await analyzeSentimentHF(mood_text);
     const mood_category = categorizeSentiment(hfResult, mood_text);
 
-    // Get or insert an uplifting message
+   
     const upliftingMessageRecord = await knex("uplifting_messages")
       .where("mood_category", mood_category)
       .first();
@@ -130,7 +130,7 @@ const createMood = async (req, res) => {
       await knex("uplifting_messages").insert({ mood_category, message: defaultMessage });
     }
 
-    // Insert mood
+   
     const [newMoodId] = await knex("mood").insert({
       mood_text,
       mood_category,
@@ -154,14 +154,14 @@ const createMood = async (req, res) => {
 };
 const getAllMoods = async (req, res) => {
   try {
-    console.log(req.user); // Log user info to check if it's properly populated
+    console.log(req.user); 
 
-    // Check if req.user is defined
+    
     if (!req.user || !req.user.id) {
       return res.status(400).json({ error: "User ID is missing or invalid." });
     }
 
-    const userId = req.user.id; // Extract userId from decoded token
+    const userId = req.user.id; 
 
     const moods = await knex("mood")
       .select(
@@ -185,19 +185,5 @@ const getAllMoods = async (req, res) => {
   }
 };
 
-// Get mood by ID
-const getMoodById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const mood = await knex("mood").where("id", id).first();
-    if (!mood) {
-      return res.status(404).json({ error: "Mood not found." });
-    }
-    res.status(200).json(mood);
-  } catch (error) {
-    console.error("Error fetching mood:", error);
-    res.status(500).json({ error: `An error occurred: ${error.message}` });
-  }
-};
 
-export { getAllMoods, createMood, getMoodById };
+export { getAllMoods, createMood};

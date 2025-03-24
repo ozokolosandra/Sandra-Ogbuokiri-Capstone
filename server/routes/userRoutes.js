@@ -7,10 +7,10 @@ const userRouter = express.Router();
 
 userRouter.route("/").get(userController.getAllUsers);
 
-// Public route
+
 userRouter.get("/me", verifyToken, getUserProfile);
 userRouter.put("/me", verifyToken, updateUserProfile);
 
-//userRouter.route("/:id").get(userController.getUserById);
+
 
 export default userRouter;
