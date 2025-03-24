@@ -56,13 +56,14 @@
         }
     }
 
-    &-link {
+    &-link,
+    & a {
         text-decoration: underline;
         color: $button-color1 !important;
         border: none !important;
-        background-color: $white;
         padding: 0 !important;
         margin: 0.5rem;
+        cursor: pointer;
 
         @include body-medium;
 
@@ -70,6 +71,8 @@
             opacity: 0.5;
         }
     }
+
+
 }
 
 .error-message {
@@ -79,4 +82,10 @@
 
 .register-link:hover {
     text-decoration: underline;
+}
+
+.mt-3 {
+    & p {
+        @include body-small;
+    }
 }

@@ -85,9 +85,9 @@ function Login({ setIsAuthenticated }) {
       <div className="mt-3">
         <p>
           Don't have an account?{" "}
-          <button className=" login-link" onClick={() => navigate("/register")}>
+          <a className="login-link" onClick={() => navigate("/register")}>
             Register here
-          </button>
+          </a>
         </p>
       </div>
     </div>

@@ -8,6 +8,7 @@
 }
 
 .modal {
+
     &__btn {
         background-color: $button-color1;
         border-radius: 5px;
@@ -22,11 +23,13 @@
     }
 
     &-message {
-        @include body-medium;
+        @include uplifiting-text;
+        padding: 1.5rem;
+
     }
 
     &-title {
         justify-content: center;
-        @include body-large;
+        @include uplifing-header;
     }
 }
