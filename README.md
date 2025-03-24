@@ -224,3 +224,15 @@
 - Allow users to use emojis or text to describe how they are feeling.
 - Add emojis to the uplifting messages retrieved from the database.
 - AI Recommendations - Use advanced models for mood suggestions.
+
+### Installation
+
+ - Clone the repo from[Repo](https://github.com/ozokolosandra/Sandra-Ogbuokiri-Capstone)
+
+- Run npm install to install all dependencies
+- Visit [ Hugging face](https://huggingface.co/) page to generate a token 
+- Create a .env file in the root directory with the provided Hugging Face API Key and other variables. 
+ - Start the development server: npm run start
+ - Start the front end page npm run dev
+
+-  Open your browser and navigate to the url in your vite server.
