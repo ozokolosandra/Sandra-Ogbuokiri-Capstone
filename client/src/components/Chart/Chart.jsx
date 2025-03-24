@@ -57,17 +57,47 @@ const Chart = forwardRef((props, ref) => {
           tooltipFormat: "MMM dd",
           displayFormats: { day: "MMM dd" },
         },
-        title: { display: true, text: "Date" },
+        title: {
+          display: true,
+          text: "Date",
+          font: {
+            family: "Outfit",
+            size: 16,
+            weight: "bold",
+            color: "#000000",
+          },
+        },
       },
       y: {
-        title: { display: true, text: "Mood Count" },
+        title: {
+          display: true,
+          text: "Mood Count",
+          font: {
+            family: "Outfit",
+            size: 16,
+            weight: "bold",
+            color: "#000000",
+          },
+        },
         min: 0,
-        max: 20,
+        max: 5,
         ticks: { stepSize: 1 },
       },
     },
     plugins: {
-      legend: { display: true, position: "top" },
+      legend: {
+        display: true,
+        position: "top",
+        labels: {
+          usePointStyle: true, 
+          pointStyle: "rectRounded", 
+          padding: 15, 
+          boxWidth: 30, 
+          boxHeight: 20, 
+          borderRadius: 5, 
+          borderWidth: 1, 
+        },
+      },
       tooltip: {
         callbacks: {
           label: (context) => `${context.dataset.label || ""}: ${context.raw}`,
@@ -83,6 +113,7 @@ const Chart = forwardRef((props, ref) => {
       borderColor: "#000000",
       backgroundColor: dataset.borderColor,
       fill: false,
+      borderWidth:1
     })),
   };
 
@@ -92,14 +123,24 @@ const Chart = forwardRef((props, ref) => {
     maintainAspectRatio: false,
     scales: {
       x: {
-        title: { display: true, text: "Vibes" },
+        title: { display: true, text: "Vibes" ,font: {
+          family: 'Outfit', 
+          size: 16,
+          weight: 'bold',
+          color:'#000000'
+        } },
         barThickness: 20,
         categoryPercentage: 0.3,
       },
       y: {
-        title: { display: true, text: "Frequency of Vibes" },
+        title: { display: true, text: "Frequency of Vibes",font: {
+          family: 'Outfit', 
+          size: 16,
+          weight: 'bold',
+          color:'#000000'
+        }},
         min: 0,
-        max: 20,
+        max: 10,
         ticks: {
           callback: (value) => numberToMood[value] || value,
         },

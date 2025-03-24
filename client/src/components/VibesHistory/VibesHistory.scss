@@ -8,7 +8,7 @@
     &__card-container {
         display: flex;
         flex-wrap: wrap;
-        gap: 15px;
+        gap: 2rem;
         justify-content: center;
         padding: 20px;
     }
@@ -49,6 +49,7 @@
                 rgba(204 190 225),
                 rgba(204 190 225));
         color: $black;
+        box-shadow: inset rgba(0, 0, 0, 0.1) 0px 2px 33px 18px;
     }
 
     &__card-back {
@@ -56,6 +57,7 @@
         flex-direction: column;
         transform: rotateY(180deg);
         background-color: #eef0f1;
+        box-shadow: inset rgba(0, 0, 0, 0.1) 0px 2px 33px 18px;
     }
 
     & h2 {
