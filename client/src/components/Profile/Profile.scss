@@ -16,57 +16,57 @@ p {
 }
 
 button {
-    height: 45px;
+    height: 2.8125rem;
 
     @include body-medium
 }
 
 .btn {
     &-success {
-        border-radius: 20px;
-        border: 5px solid $button-color1;
+        border-radius: 1.25rem;
+        border: 0.3125rem solid $button-color1;
         background-color: $button-color1;
         color: $white;
-        width: 200px;
+        width: 12.5rem;
 
 
         &:hover {
             opacity: 0.5;
 
-            border: 5px solid $button-color1;
+            border: 0.3125rem solid $button-color1;
             background-color: $button-color1;
         }
 
         @include tablet {
-            width: 250px;
+            width: 15.625rem;
         }
     }
 
     &-cancel {
-        border-radius: 20px;
+        border-radius: 1.25rem;
         border: 1px solid $button-color2;
         background-color: $button-color2;
         color: $white;
-        width: 200px;
+        width: 12.5rem;
     }
 
     &:hover {
         opacity: 0.5;
 
-        border: 5px solid $off-white;
+        border: 0.3125rem solid $off-white;
         background-color: $cancel-btn;
     }
 
     &-edit {
-        border-radius: 20px;
-        border: 5px solid $button-color1;
+        border-radius: 1.25rem;
+        border: 0.3125rem solid $button-color1;
         background-color: $button-color1;
         color: $white;
-        width: 200px;
+        width: 12.5rem;
 
         &:hover {
             opacity: 0.5;
-            border: 5px solid $button-color1;
+            border: 0.3125rem solid $button-color1;
             background-color: $button-color1;
         }
     }
@@ -91,13 +91,13 @@ h3 {
 
 .b .success-message {
     position: fixed;
-    top: 80px;
-    right: 10px;
+    top: 5rem;
+    right: 0.625rem;
     background-color: $button-color1;
     color: $white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    border-radius: 10px;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.3125rem;
+    border-radius: 0.625rem;
     animation: fadeInOut 3s ease-in-out;
 }
 

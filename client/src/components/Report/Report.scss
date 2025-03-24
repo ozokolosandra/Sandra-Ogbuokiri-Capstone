@@ -16,15 +16,15 @@
     }
 
     &__durationPicker {
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem
     }
 
     &__customDatePicker {
-        margin-top: 10px;
+        margin-top: 0.625rem;
     }
 
     &__datePickerLabel {
-        margin-right: 10px;
+        margin-right: 0.625rem;
     }
 
     &__start-date {
@@ -39,14 +39,14 @@
 
     &__applyButton {
         margin: 1rem;
-        width: 200px;
-        padding: 5px 5px !important;
+        width: 12.5rem;
+        padding: 0.3125rem 0.3125rem !important;
         background-color: $button-color1;
         color: $white;
-        border: 5px solid $button-color1;
-        border-radius: 12px;
+        border: 0.3125rem solid $button-color1;
+        border-radius: 0.75rem;
         cursor: pointer;
-        height: 50px;
+        height: 3.125rem;
 
         &:hover {
             opacity: 0.5;
@@ -56,69 +56,69 @@
     }
 
     &__chartContainer {
-        margin-top: 20px;
-        min-height: 300px;
+        margin-top: 1.25rem;
+        min-height: 18.75rem;
     }
 
     &__errorMessage {
-        margin-top: 20px;
+        margin-top: 1.25rem;
     }
 
     &__chart {
         canvas {
             border: 1px solid #ddd;
-            border-radius: 20px;
+            border-radius: 1.25rem;
             background-color: #f9f9f9;
-            height: 330px;
+            height: 20.625rem;
             width: 100%;
         }
 
         .chartjs-legend {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 0.625rem;
+            margin-bottom: 1.25rem;
 
             .legend-item {
                 display: flex;
                 align-items: center;
-                gap: 5px;
+                gap: 0.3125rem;
 
                 .legend-color-box {
-                    width: 12px;
-                    height: 12px;
-                    border-radius: 3px;
+                    width: 0.75rem;
+                    height: 0.75rem;
+                    border-radius: 0.1875rem;
                 }
 
                 .legend-text {
-                    font-size: 14px;
+                    font-size: 0.875rem;
                     color: #333;
                 }
             }
         }
 
-        // Target tooltips
+
         .chartjs-tooltip {
             background-color: rgba(0, 0, 0, 0.8);
             color: white;
-            border-radius: 4px;
-            padding: 8px;
-            font-size: 12px;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            font-size: 0.75rem;
             pointer-events: none;
         }
     }
 }
 
 .report__durationPicker {
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
 
     label {
-        margin-right: 10px;
+        margin-right: 0.625rem;
     }
 
     select {
-        padding: 5px;
-        border-radius: 4px;
+        padding: 0.3125rem;
+        border-radius: 0.25rem;
         border: 1px solid #ccc;
     }
 }

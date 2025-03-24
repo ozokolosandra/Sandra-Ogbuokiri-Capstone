@@ -19,8 +19,8 @@ span {
 .submit-btn {
     border: 1px solid $button-color2;
     background-color: $button-color1;
-    width: 200px;
-    border-radius: 20px;
+    width: 12.5rem;
+    border-radius: 1.25rem;
     color: $white;
     @include button;
 
@@ -32,7 +32,7 @@ span {
 .btn-cancel-btn {
     border: 1px solid $button-color2;
     background-color: $button-color2;
-    width: 120px;
+    width: 7.5rem;
     border-radius: 1.25rem;
     color: $white;
     @include button;

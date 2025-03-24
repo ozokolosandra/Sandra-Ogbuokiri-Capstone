@@ -5,17 +5,17 @@
 
     .side-nav {
         position: absolute;
-        width: 60px;
+        width: 3.75rem;
         height: 100vh;
 
         display: flex;
         flex-direction: column;
-        padding-top: 20px;
+        padding-top: 1.25rem;
         transition: width 0.3s ease;
     }
 
     .add-vibes-container {
-        margin-left: 50px; // Default position
+        margin-left: 3.125rem;
         transition: margin-left 0.3s ease;
     }
 }
