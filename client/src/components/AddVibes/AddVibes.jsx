@@ -56,7 +56,6 @@ function AddVibes({ user, onCancel }) {
         date,
         user_id: user?.id,
       });
-      console.log(date);
 
       setUpliftingMessage(response.data.uplifting_message);
       setIsModalOpen(true);

@@ -18,8 +18,6 @@ const moodKeywords = {
   Neutral: ["neutral", "indifferent", "okay", "fine"],
 };
 
-
-
 // Analyze sentiment using Hugging Face API
 async function analyzeSentimentHF(text, retries = 3) {
   try {
@@ -34,7 +32,6 @@ async function analyzeSentimentHF(text, retries = 3) {
 
     if (!response.ok) {
       if (response.status === 503 && retries > 0) {
-        console.log("Hugging Face API unavailable. Retrying in 5 seconds...");
         await new Promise((resolve) => setTimeout(resolve, 5000));
         return analyzeSentimentHF(text, retries - 1);
       }
@@ -68,7 +65,11 @@ const categorizeSentiment = (hfResult, text) => {
   const inferredMood = inferMoodFromKeywords(text);
   if (inferredMood) return inferredMood;
 
-  if (!Array.isArray(hfResult) || hfResult.length === 0 || !Array.isArray(hfResult[0])) {
+  if (
+    !Array.isArray(hfResult) ||
+    hfResult.length === 0 ||
+    !Array.isArray(hfResult[0])
+  ) {
     return "Neutral";
   }
 
@@ -89,16 +90,16 @@ const categorizeSentiment = (hfResult, text) => {
 // Default uplifting messages
 const defaultMessages = {
   "Very Happy": "You're on top of the world! Keep shining!",
-  "Happy": "Keep smiling and spreading joy!",
-  "Neutral": "Stay positive and take things one step at a time.",
-  "Sad": "It's okay to feel down sometimes. Tomorrow is a new day.",
+  Happy: "Keep smiling and spreading joy!",
+  Neutral: "Stay positive and take things one step at a time.",
+  Sad: "It's okay to feel down sometimes. Tomorrow is a new day.",
   "Very Sad": "Things will get better. You're stronger than you think.",
-  "Confident": "You are unstoppable! Keep believing in yourself.",
-  "Excited": "This is just the beginning of something amazing!",
-  "Remorseful": "It’s okay to make mistakes. Learn and grow from them.",
-  "Lonely": "You are never truly alone. Reach out to someone who cares.",
-  "Stressed": "Take a deep breath. You’ve got this!",
-  "Hopeful": "Great things are coming your way. Stay positive!",
+  Confident: "You are unstoppable! Keep believing in yourself.",
+  Excited: "This is just the beginning of something amazing!",
+  Remorseful: "It’s okay to make mistakes. Learn and grow from them.",
+  Lonely: "You are never truly alone. Reach out to someone who cares.",
+  Stressed: "Take a deep breath. You’ve got this!",
+  Hopeful: "Great things are coming your way. Stay positive!",
 };
 
 // Create a new mood entry
@@ -107,30 +108,31 @@ const createMood = async (req, res) => {
     const { mood_text, user_id, date } = req.body; // Expect `date` from the frontend
 
     if (!mood_text || !user_id || !date) {
-      return res.status(400).json({ error: "mood_text, user_id, and date are required!" });
+      return res
+        .status(400)
+        .json({ error: "mood_text, user_id, and date are required!" });
     }
 
-    
     const parsedDate = new Date(date);
     if (isNaN(parsedDate.getTime())) {
       return res.status(400).json({ error: "Invalid date format." });
     }
 
-    
     const hfResult = await analyzeSentimentHF(mood_text);
     const mood_category = categorizeSentiment(hfResult, mood_text);
 
-   
     const upliftingMessageRecord = await knex("uplifting_messages")
       .where("mood_category", mood_category)
       .first();
 
     if (!upliftingMessageRecord) {
       const defaultMessage = defaultMessages[mood_category] || "Stay positive!";
-      await knex("uplifting_messages").insert({ mood_category, message: defaultMessage });
+      await knex("uplifting_messages").insert({
+        mood_category,
+        message: defaultMessage,
+      });
     }
 
-   
     const [newMoodId] = await knex("mood").insert({
       mood_text,
       mood_category,
@@ -144,7 +146,8 @@ const createMood = async (req, res) => {
       .where("mood_category", mood_category)
       .first();
 
-    const uplifting_message = updatedUpliftingMessageRecord?.message || defaultMessages[mood_category];
+    const uplifting_message =
+      updatedUpliftingMessageRecord?.message || defaultMessages[mood_category];
 
     res.status(201).json({ ...newMood, uplifting_message });
   } catch (error) {
@@ -154,14 +157,11 @@ const createMood = async (req, res) => {
 };
 const getAllMoods = async (req, res) => {
   try {
-    console.log(req.user); 
-
-    
     if (!req.user || !req.user.id) {
       return res.status(400).json({ error: "User ID is missing or invalid." });
     }
 
-    const userId = req.user.id; 
+    const userId = req.user.id;
 
     const moods = await knex("mood")
       .select(
@@ -185,5 +185,4 @@ const getAllMoods = async (req, res) => {
   }
 };
 
-
-export { getAllMoods, createMood};
+export { getAllMoods, createMood };

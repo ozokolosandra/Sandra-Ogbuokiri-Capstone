@@ -30,15 +30,9 @@ function Login({ setIsAuthenticated }) {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user_name", response.data.user_name);
 
-      console.log(`User is ${response.data.user_id}`);
-      console.log(`Username is ${response.data.user_name}`);
-      console.log(setIsAuthenticated); // Check if it is a function
-
       setIsAuthenticated(true);
       navigate("/", { replace: true });
-      console.log("Navigating to HomePage...");
 
-      console.log(localStorage.getItem("token"));
     } catch (err) {
       console.error(err);
 

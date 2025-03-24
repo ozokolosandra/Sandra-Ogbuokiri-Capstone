@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header/Header";
-import axios from "axios";
 import AddVibes from "../../components/AddVibes/AddVibes";
 import { useNavigate } from "react-router-dom";
 import SideNav from "../../components/SideNav/SideNav";
 import "./HomePage.scss";
 
 function HomePage() {
-  console.log("Rendering HomePage...");
-
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isSideNavVisible, setIsSideNavVisible] = useState(false);
 
   const toggleSideNav = () => {
     setIsSideNavVisible((prev) => {
-      console.log("Toggling Side Nav. Current State:", !prev); // Debugging
-      return !prev; // Toggle the state
+      return !prev;
     });
   };
 
@@ -35,14 +31,15 @@ function HomePage() {
     }
   }, [navigate]);
 
-  const handleCancel = () => {
-    console.log("Cancelled adding vibes");
-  };
+  const handleCancel = () => {};
 
   return (
     <div>
       <Header toggleSideNav={toggleSideNav} />
-      <SideNav isSideNavVisible={isSideNavVisible} toggleSideNav={toggleSideNav} />
+      <SideNav
+        isSideNavVisible={isSideNavVisible}
+        toggleSideNav={toggleSideNav}
+      />
 
       {user ? (
         <AddVibes user={user} onCancel={handleCancel} />

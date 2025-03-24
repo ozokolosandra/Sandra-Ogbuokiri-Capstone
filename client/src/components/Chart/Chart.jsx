@@ -80,7 +80,7 @@ const Chart = forwardRef((props, ref) => {
           },
         },
         min: 0,
-        max: 5,
+        max: 7,
         ticks: { stepSize: 1 },
       },
     },

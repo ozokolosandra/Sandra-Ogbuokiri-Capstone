@@ -106,13 +106,6 @@ const Report = forwardRef((props, ref) => {
       const formattedStartDate = new Date(start).toISOString().split("T")[0];
       const formattedEndDate = new Date(end).toISOString().split("T")[0];
 
-      console.log("Fetching bar chart data for:", {
-        formattedStartDate,
-        formattedEndDate,
-        user_id,
-      });
-
-      // Fetch data for bar chart from /reports endpoint
       const response = await axios.get(`${baseURL}/reports`, {
         params: {
           start_date: formattedStartDate,
@@ -121,11 +114,7 @@ const Report = forwardRef((props, ref) => {
         },
       });
 
-      console.log("Bar Chart API Response:", response.data);
-
       const { mood_trends } = response.data;
-
-      // Ensure mood_trends is an object
       if (typeof mood_trends !== "object" || mood_trends === null) {
         throw new Error("Invalid mood_trends data");
       }
@@ -141,12 +130,11 @@ const Report = forwardRef((props, ref) => {
         setChartData({ labels: [], datasets: [] });
       }
     } catch (error) {
-      console.error("Error fetching bar chart data:", error);
       setErrorMessage("Failed to fetch bar chart data. Please try again.");
       setChartData({ labels: [], datasets: [] });
     }
   };
-  // Function to fetch data for the line chart
+
   const fetchLineChartData = async (start, end, user_id) => {
     try {
       if (!user_id) {
@@ -165,12 +153,6 @@ const Report = forwardRef((props, ref) => {
       const formattedStartDate = start;
       const formattedEndDate = end;
 
-      console.log("Fetching line chart data for:", {
-        start_date: formattedStartDate,
-        end_date: formattedEndDate,
-        user_id,
-      });
-
       const response = await axios.get(`${baseURL}/trends`, {
         params: {
           start_date: formattedStartDate,
@@ -179,19 +161,14 @@ const Report = forwardRef((props, ref) => {
         },
       });
 
-      console.log("Line Chart API Response:", response.data);
-
       const { mood_trends } = response.data;
 
-      // Ensure mood_trends is an object
       if (typeof mood_trends !== "object" || mood_trends === null) {
         throw new Error("Invalid mood_trends data");
       }
 
       // Transform data for line chart
       const transformedData = transformDataForLineChart(mood_trends);
-
-      console.log("Transformed Line Chart Data:", transformedData);
 
       if (transformedData.labels.length > 0) {
         setChartData(transformedData);

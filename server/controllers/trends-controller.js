@@ -13,7 +13,7 @@ const getMoodTrends = async (req, res) => {
 
     const isValidDate = (date) => {
       const regex = /^\d{4}-\d{2}-\d{2}$/;
-      console.log(regex);
+      
       return regex.test(date) && !isNaN(new Date(date).getTime());
       
       
@@ -27,7 +27,6 @@ const getMoodTrends = async (req, res) => {
       return res.status(400).json({ error: "start_date cannot be later than end_date." });
     }
 
-    console.log("Start Date:", start_date, "End Date:", end_date);
 
     // Query using SQL aggregation for efficiency
     const moodTrends = await knex("mood")
@@ -38,7 +37,7 @@ const getMoodTrends = async (req, res) => {
       .orderBy("date", "asc");
 
     if (moodTrends.length === 0) {
-      console.log("No moods found within the given time period.");
+      return "No moods found within the given time period.";
     }
 
     // Reformat data to match the desired response
@@ -58,7 +57,6 @@ const getMoodTrends = async (req, res) => {
       }));
     });
     
-    console.log(flattenedTrends);
     
     res.status(200).json({ mood_trends: formattedTrends, time_period: { start_date, end_date } });
 

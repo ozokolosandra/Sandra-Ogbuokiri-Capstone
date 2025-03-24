@@ -37,15 +37,7 @@ const getReport = async (req, res) => {
       query.where("created_at", "<=", new Date(end_date + "T23:59:59Z"));
     }
 
-    // Log the SQL query for debugging
-    console.log("Generated SQL Query: ", query.toString());
-
     const moods = await query;
-
-    // Log the moods array for debugging
-    console.log(`Moods: ${JSON.stringify(moods)}`);
-
-    // Handle empty mood data
     if (moods.length === 0) {
       return res.status(404).json({
         message: `No mood data found for user ID: ${user_id} within the specified date range.`,
@@ -65,7 +57,7 @@ const getReport = async (req, res) => {
 
     // Construct report data
     const reportData = {
-      mood_trends: moodDataByDate, // Mood data grouped by date
+      mood_trends: moodDataByDate, 
       time_period: {
         start_date: start_date || "No start date provided",
         end_date: end_date || "No end date provided",
