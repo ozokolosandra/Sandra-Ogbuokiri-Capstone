@@ -227,7 +227,7 @@
 
 ### Installation
 
- - Clone the repo from[Repo](https://github.com/ozokolosandra/Sandra-Ogbuokiri-Capstone)
+ - Clone the repo from [Repo](https://github.com/ozokolosandra/Sandra-Ogbuokiri-Capstone)
 
 - Run npm install to install all dependencies
 - Visit [ Hugging face](https://huggingface.co/) page to generate a token 
