@@ -231,7 +231,9 @@
 
 - Run npm install to install all dependencies
 - Visit [ Hugging face](https://huggingface.co/) page to generate a token 
-- Create a .env file in the root directory with the provided Hugging Face API Key and other variables. 
+- Create a .env file in the root directory with the provided Hugging Face API Key and other variables.
+-  Run npm run migrate
+-  Run npm run seed
  - Start the development server: npm run start
  - Start the front end page npm run dev
 
