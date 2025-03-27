@@ -57,7 +57,7 @@ const VibesHistory = () => {
 
   return (
     <div className="mood_history">
-      <h2>Mood History</h2>
+      <h2>Vibe History</h2>
       <div className="mood_history__card-container">
         {moods.map((mood) => (
           <div
