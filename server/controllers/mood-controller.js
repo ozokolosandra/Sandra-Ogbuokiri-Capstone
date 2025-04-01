@@ -1,13 +1,11 @@
 import initKnex from "knex";
 import configuration from "../knexfile.js";
-
 const knex = initKnex(configuration);
 
-// Hugging Face API configuration
 const HF_API_URL = process.env.HF_API_URL;
 const HF_API_TOKEN = process.env.HF_API_TOKEN;
 
-// Keyword mapping for mood categories
+
 const moodKeywords = {
   Confident: ["confident", "valuable", "proud", "capable"],
   Excited: ["excited", "thrilled", "pumped", "eager"],
@@ -18,7 +16,7 @@ const moodKeywords = {
   Neutral: ["neutral", "indifferent", "okay", "fine"],
 };
 
-// Analyze sentiment using Hugging Face API
+
 async function analyzeSentimentHF(text, retries = 3) {
   try {
     const response = await fetch(HF_API_URL, {
@@ -49,7 +47,7 @@ async function analyzeSentimentHF(text, retries = 3) {
   }
 }
 
-// Infer mood using keywords
+
 const inferMoodFromKeywords = (text) => {
   const lowerCaseText = text.toLowerCase();
   for (const [mood, keywords] of Object.entries(moodKeywords)) {
@@ -87,7 +85,7 @@ const categorizeSentiment = (hfResult, text) => {
   return "Neutral";
 };
 
-// Default uplifting messages
+
 const defaultMessages = {
   "Very Happy": "You're on top of the world! Keep shining!",
   Happy: "Keep smiling and spreading joy!",

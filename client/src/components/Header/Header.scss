@@ -13,6 +13,12 @@
     width: 100%;
     gap: 0.5rem;
 
+    & a {
+        text-decoration: none !important;
+        appearance: none;
+        color: $primary-colour1 !important;
+    }
+
     &__title {
         background: linear-gradient(74deg, #edeaef, #d5c3db);
         -webkit-background-clip: text;

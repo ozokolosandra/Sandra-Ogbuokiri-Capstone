@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Header.scss";
 import menuIcon from "../../assets/images/menu.svg";
+import  {Link} from "react-router";
 
 const Header = ({ toggleSideNav }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -16,7 +17,9 @@ const Header = ({ toggleSideNav }) => {
   return (
     <>
       <div className="header">
-        <span className="header__title">Vibes♥Radar</span>
+      <span className="header__title">
+        <Link to="/">Vibes♥Radar</Link>
+      </span>
 
         <div
           className="header__icon"
