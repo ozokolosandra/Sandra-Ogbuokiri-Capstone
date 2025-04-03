@@ -45,10 +45,14 @@
   - `jsonwebtoken` for authentication
 
 #### Pages
-
+- **Register:** User creates an account.
+![Home](client/src/assets/mockups/Register%20Page.png)
 - **Login:** User login page with credentials form.
+![Login](client/src/assets/mockups/Login%20Page.png)
 - **Home:** User's dashboard showing form for creating vibes.
+![Home](client/src/assets/mockups/Home%20Page.png)
 - **Report:** A page displaying past mood entries and summary of the user's mood trends as well as download option.
+
 - **Profile:** Edit and view profile information.
 - **History:** View previous mood logs and associated tips.
 
